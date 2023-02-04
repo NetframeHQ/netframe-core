@@ -1,0 +1,185 @@
+version: "3.3"
+
+services:
+    proxy:
+        image: nginx:1.18
+        depends_on:
+            - netframe
+            - broadcast
+        expose:
+            - "8000"
+        ports:
+            - "8000:80"
+        volumes:
+            - "./docker/nginx.conf:/etc/nginx/nginx.conf:ro"
+            - "./:/app:z"
+            - "netframe-data:/data:z,delegated"
+        networks:
+            default:
+                ipv4_address: 172.0.1.2
+                aliases:
+                    - "work.devdocker.netframe.online"
+    dns:
+        build:
+            context: .
+            dockerfile: docker/dns.dev.Dockerfile
+        expose:
+            - "53"
+        volumes:
+            - "./docker/dnsmasq.conf:/etc/dnsmasq.conf:ro"
+        networks:
+            default:
+                ipv4_address: 172.0.1.1
+    netframe:
+        build:
+            context: .
+            dockerfile: docker/netframe.dev.Dockerfile
+        depends_on:
+            - database
+            - search
+            - cache
+        command: ["bash", "/app/docker/netframe-entrypoint.sh"]
+        environment:
+            CACHE_DRIVER: array
+            DB_HOST: database
+            DB_DATABASE: netframe5
+            DB_USERNAME: netframe_dev
+            DB_PASSWORD: netframe5_dev
+            MAIL_DRIVER: log
+            NETFRAME_DATA_PATH: "/data"
+            QUEUE_DRIVER: redis
+            REDIS_HOST: cache
+            SEARCH_ENABLED: "true"
+            SEARCH_HOSTS: "http://search:9200"
+            PROXY_FILE_SENDING_HEADER: "X-Accel-Redirect"
+        expose:
+            - "9000"
+        volumes:
+            - "./:/app:z,cached"
+            - "netframe-data:/data:z,delegated"
+            - "./storage/models:/data/storage/models:z,delegated"
+        working_dir: "/app/public"
+    broadcast:
+        build:
+            context: .
+            dockerfile: docker/broadcast.dev.Dockerfile
+        depends_on:
+            - netframe
+            - cache
+        expose:
+            - "6001"
+    collab:
+        image: node:11-stretch
+        command: "server.js"
+        depends_on:
+            - database
+        entrypoint: "node"
+        volumes:
+            - "./node/:/app:cached"
+        expose:
+            - "3000"
+        environment:
+            DB_HOST: database
+            DB_DATABASE: netframe5
+            DB_USERNAME: netframe_dev
+            DB_PASSWORD: netframe5_dev
+        ulimits:
+            nofile: 65535
+        user: node
+        volumes:
+            - "./:/app"
+        working_dir: "/app/node"
+        restart: on-failure
+    onlyoffice:
+        image: onlyoffice/documentserver:5.5
+        expose:
+            - "80"
+        entrypoint: ["bash", "/onlyoffice-entrypoint.sh"]
+        volumes:
+            - "./docker/onlyoffice-entrypoint.sh:/onlyoffice-entrypoint.sh:ro"
+    assets:
+        image: node:10.15.2-stretch
+        entrypoint: [ "npx", "npm@5.8.0", "run" ]
+        command: watch
+        ulimits:
+            nofile: 65535
+        user: node
+        volumes:
+            - "./:/app:z,cached"
+        working_dir: "/app"
+    database:
+        image: mariadb:10.3
+        command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_general_ci']
+        environment:
+            MYSQL_ROOT_PASSWORD: netframe_dev_root
+            MYSQL_USER: netframe_dev
+            MYSQL_PASSWORD: netframe5_dev
+            MYSQL_DATABASE: netframe5
+        expose:
+            - "3306"
+        user: mysql
+        volumes:
+            - "database-data:/var/lib/mysql:delegated"
+            - "./docker/mysql.cnf:/etc/mysql/conf.d/custom.cnf:ro"
+            - "./docker/database-init:/docker-entrypoint-initdb.d:z"
+    cache:
+        image: redis:5.0-buster
+        expose:
+            - "6379"
+    search:
+        image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.8.1
+        environment:
+            cluster.name: search
+            discovery.type: "single-node"
+            node.name: search01
+            bootstrap.system_call_filter: "false"
+            ES_JAVA_OPTS: "-Xms256m -Xmx256m"
+        expose:
+            - "9200"
+            - "9300"
+        volumes:
+            - "search-data:/usr/share/elasticsearch/data:delegated"
+    cypress:
+        image: cypress/included:9.5.4
+        command: ["help"]
+        depends_on:
+            - netframe
+        entrypoint: ["cypress"]
+        environment:
+            CYPRESS_baseUrl: "http://work.devdocker.netframe.online:8000"
+            CYPRESS_numTestsKeptInMemory: "0"
+            CYPRESS_watchForFileChanges: "false"
+        volumes:
+            - "./:/app:z,delegated"
+        working_dir: "/app"
+    phpmyadmin:
+        image: phpmyadmin:5.0
+        depends_on:
+            - "database"
+        environment:
+            PMA_HOST: "database"
+            PMA_PORT: "3306"
+            PMA_USER: "netframe_dev"
+            PMA_PASSWORD: "netframe5_dev"
+        ports:
+            - "8080:80"
+    kibana:
+        image: docker.elastic.co/kibana/kibana-oss:6.0.1
+        depends_on:
+            - "search"
+        environment:
+            ELASTICSEARCH_URL: "http://search:9200"
+            elasticsearch.url: "http://search:9200"
+        ports:
+            - "8081:5601"
+
+networks:
+    default:
+        ipam:
+            config:
+                - subnet: 172.0.1.1/16
+
+volumes:
+    netframe-data:
+    database-data:
+    search-data:

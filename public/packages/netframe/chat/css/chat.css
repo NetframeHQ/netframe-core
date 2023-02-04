@@ -1,0 +1,209 @@
+/* User panel */
+.chatUsers {
+    position: fixed;
+    right: 0;
+    bottom: 0px; /* Depends on sticky footer height */
+    width: 250px;
+    border: 1px solid #c6c6c6;
+    z-index:1000;
+    right:-150px;
+}
+
+.chatUsers header {
+    background: #0d98d2;
+    height: 30px;
+    line-height: 20px;
+}
+
+.chatUserList {
+    background: white;
+    height: 300px;
+    padding: 0;
+    margin-bottom: 0;
+    overflow-y: scroll;
+}
+
+.chatUsers header, .chatWindow header {
+    color: white;
+    padding: 5px;
+    cursor: pointer;
+}
+
+/* User name */
+.chatUser {
+    position: relative;
+    padding: 10px 30px 10px 10px;
+    list-style-type: none;
+}
+
+.chatUser:hover {
+    background: #f8f8f8;
+    cursor: pointer;
+}
+
+.chatUsers .status-online{
+    color: #999999;
+}
+
+.chatUsers .status-online{
+    color: #00ff00;
+}
+
+/* Connection status square */
+.avatar {
+    height: 30px;
+    width: 30px;
+    border-radius: 6px;
+}
+
+.chatWindow {
+    position: fixed;
+    bottom: 0px; /* Depends on sticky footer height */
+    width: 250px;
+    border: 1px solid #BDC3C7;
+    z-index: 1001;
+}
+
+.chatWindow header {
+    background: #EEEEEE;
+    color: #000000;
+}
+
+.chatMessageWrapper {
+    height: 200px;
+    font-size: 12px;
+    padding: 15px;
+    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    background-color: #FFFFFF;
+}
+
+.chatMessageInput {
+    width: 100%;
+    border: 1px solid white;
+    border-top: 1px solid #DDDDDD;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.closeX {
+    float: right;
+    cursor: pointer;
+    line-height: 30px;
+}
+
+.reduceChat {
+    float: right;
+    cursor: pointer;
+}
+
+.chatMessage {
+    position: relative;
+    padding: 10px;
+    min-height: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #BDC3C7;
+}
+
+.chatMessage.from {
+    background: #76c5e6;
+}
+
+.chatMessage.to {
+    background: #fff;
+}
+
+.chatMessage.from:before, .chatMessage.to:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 10px solid;
+    top: 8px;
+}
+
+/* Outer triangle */
+.chatMessage.from:before {
+    border-color: transparent #c6c6c6 transparent transparent;
+    left: -20px;
+}
+
+/* Inner triangle */
+.chatMessage.from:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -16px;
+    top: 10px;
+    border: 8px solid;
+    border-color: transparent #76c5e6 transparent transparent;
+}
+
+/* Outer triangle */
+.chatMessage.to:after {
+    border-color: transparent transparent transparent #c6c6c6;
+    right: -20px;
+}
+
+/* Inner triangle */
+.chatMessage.to:before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    right: -16px;
+    top: 10px;
+    border: 8px solid;
+    border-color: transparent transparent transparent #fff;
+    z-index: 30;
+}
+
+img.emoji {
+    height: 1em;
+    width: 1em;
+    margin: 0 .05em 0 .1em;
+    vertical-align: -0.1em;
+}
+
+.chatWindowFooter {
+    background:white;
+    padding: 10px 5px 10px 5px;
+}
+
+.chatWindowFooter .form-group {
+    display: inline-block;
+    margin-bottom: 0;
+    margin-right: 3px;
+}
+
+.chatPreviousMessages {
+    margin-bottom: 15px;
+}
+
+.chatMessages {
+    padding: 0;
+}
+
+.chatMessageTime {
+    font-size: 11px;
+    color: #BDC3C7;
+}
+
+/* XExtra Small devices (Phone, <440px) */
+@media (max-width: 768px) {
+    
+    .chatUsers{
+        bottom:49px;
+    }
+    
+    .chatWindow {
+	    /*position: absolute;*/
+	    bottom: 49px; /* Depends on sticky footer height */
+	    right:0 !important;
+	    z-index:1000;
+	    width:100%;
+	}
+}

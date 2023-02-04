@@ -1,0 +1,46 @@
+<?php
+
+return array (
+  '\'' =>
+  array (
+    '$Taction->author_type' =>
+    array (
+      '\'_profile' => 'perfil',
+    ),
+  ),
+  'like' => 'aprobar el perfil',
+  'follow' => 'siguiente',
+  'new_profile' => 'ha creado ',
+  'new_friend' => 'tiene un nuevo amigo',
+  'favorite_media' => 'emitió un favorito medios',
+  'community_profile' => 'página de grupo',
+  'house_profile' => 'página de entidad',
+  'project_profile' => 'proyecto',
+  'community' => 'grupo',
+  'house' => 'entidad',
+  'project' => 'proyectoet',
+  'user' => 'usuario',
+  'post_on' => 'publicado en',
+  'bookmark' => 'usuario',
+  'angelNewreference' => 'tiene una nueva referencia',
+  'joinProject' => 'se ha agregado al proyecto',
+  'participant_event' => 'asiste a un evento',
+  'App\\Channel' => 'hilos de discusión',
+  'App\\Community' => 'grupo',
+  'App\\Community_profile' => 'nuevo grupos',
+  'App\\House' => 'entidad',
+  'App\\House_profile' => 'nueva entidad',
+  'App\\Project' => 'proyecto',
+  'App\\Project_profile' => 'un nuevo proyecto',
+  'App\\User' => 'usuario',
+  'bookmark_media' => 'informes favoritos',
+  'joinChannel' => 'juntarse a este hilo de discusión',
+  'joinCommunity' => 'juntarse a este grupo',
+  'joinHouse' => 'juntarse a esta entidad',
+  'userNewreference' => 'nueva referencia usuario',
+  'linkchannel' => 'Ver el hilo de discusión',
+  'linkcommunity' => 'ver al grupo',
+  'linkhouse' => 'ver la entidad',
+  'linkproject' => 'ver el proyecto',
+  'linkuser' => 'ver el usuario',
+);

@@ -1,0 +1,1 @@
+@include('page.type-content.medias.full-size')

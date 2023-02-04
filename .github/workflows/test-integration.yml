@@ -1,0 +1,39 @@
+name: Test end-to-end
+
+on:
+  push:
+    branches-ignore:
+      - 'fix/**'
+      - 'task/**'
+    paths-ignore:
+      - 'docs/**'
+
+jobs:
+  tests-e2e:
+    name: Tests end-to-end
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update setup scripts
+        run: sh docker/prepare-pipeline-files.sh
+      - name: Setup environment
+        run: make setup
+        timeout-minutes: 30
+      - name: Launch environment
+        run: make start:background
+        timeout-minutes: 5
+      - name: Stop useless containers
+        run: docker-compose stop kibana phpmyadmin
+      - name: Run Cypress tests
+        run: make test:integration
+        timeout-minutes: 10
+      - name: Upload tests screenshots and videos
+        uses: actions/upload-artifact@v2
+        with:
+          name: tests-media
+          path: |
+            cypress/screenshots/
+            cypress/videos/
+          retention-days: 5
+      - name: Stop environment
+        run: make stop

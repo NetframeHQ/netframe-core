@@ -1,0 +1,48 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "collab.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pm2:start": "./node_modules/.bin/pm2 start ecosystem.config.js",
+    "pm2:stop": "./node_modules/.bin/pm2 stop ecosystem.config.js",
+    "pm2:restart": "./node_modules/.bin/pm2 restart ecosystem.config.js",
+    "pm2:monit": "./node_modules/.bin/pm2 monit ecosystem.config.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/node": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/runtime": "^7.2.0",
+    "dotenv": "^8.2.0",
+    "engine.io": "^3.4.0",
+    "express": "^4.16.4",
+    "mysql": "^2.17.1",
+    "pm2": "^4.5.0",
+    "prosemirror-model": "^1.7.0",
+    "prosemirror-transform": "^1.1.3",
+    "socket.io": "^2.2.0"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "useBuiltIns": "entry"
+        }
+      ]
+    ],
+    "comments": false,
+    "compact": true
+  },
+  "engines": {
+    "node": "11.x"
+  },
+  "devDependencies": {
+    "eslint": "^7.14.0"
+  }
+}

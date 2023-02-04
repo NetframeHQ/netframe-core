@@ -1,0 +1,94 @@
+name: Lint and test unit
+
+on: push
+
+jobs:
+  lint-php:
+    name: Lint the PHP code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install PHP and required extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1.1'
+          extensions: xdebug-3.2.0, openssl, pdo, pdo_mysql, mbstring, tokenizer, xml, zip, bz2, imagick
+        env:
+          fail-fast: true
+      - name: Install composer
+        run: |
+          curl -o /tmp/composer-setup.php https://raw.githubusercontent.com/composer/getcomposer.org/master/web/installer
+          php /tmp/composer-setup.php --version=2.0.9 --install-dir=./ --filename=composer
+          rm /tmp/composer-setup.php
+      - name: Install composer dependencies
+        run: ./composer install --no-progress
+        env:
+          SEARCH_HOSTS: "http://search:9200"
+      - name: Run phpcs
+        run: ./bin/phpcs
+      - name: Run phplint
+        run: ./bin/phplint ./
+        env:
+          SEARCH_HOSTS: "http://search:9200"
+  lint-nodejs:
+    name: Lint the NodeJS code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache npm
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+      - name: Install npm dependencies
+        run: npm install
+        working-directory: ./node
+      - name: Run eslint
+        run: ./node_modules/.bin/eslint .
+        working-directory: ./node
+  tests-unit-php:
+    name: Tests unit the PHP code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install PHP and required extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1.1'
+          extensions: xdebug-3.2.0, openssl, pdo, pdo_mysql, mbstring, tokenizer, xml, zip, bz2, imagick
+          ini-values: zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so
+        env:
+          fail-fast: true
+      - name: Install composer
+        run: |
+          curl -o /tmp/composer-setup.php https://raw.githubusercontent.com/composer/getcomposer.org/master/web/installer
+          php /tmp/composer-setup.php --version=2.0.9 --install-dir=./ --filename=composer
+          rm /tmp/composer-setup.php
+      - name: Install composer dependencies
+        run: ./composer install --no-progress
+        env:
+          SEARCH_HOSTS: "http://search:9200"
+      - name: Generate Laravel app key
+        run: php artisan key:generate --show --no-ansi | sed -e 's/^/APP_KEY=/' >> .env
+        env:
+          SEARCH_HOSTS: "http://search:9200"
+      - name: Run unit tests
+        run: |
+          mkdir -p tests-coverage/unit
+          ./bin/phpunit --testsuite "Unit Tests" \
+            --log-junit tests-coverage/unit/logs.xml \
+            --coverage-clover tests-coverage/unit/clover.xml \
+            --coverage-html tests-coverage/unit/html/
+      - name: Run feature tests
+        run: |
+          mkdir -p tests-coverage/feature
+          ./bin/phpunit --testsuite "Feature Tests" \
+            --log-junit tests-coverage/feature/logs.xml \
+            --coverage-clover tests-coverage/feature/clover.xml \
+            --coverage-html tests-coverage/feature/html/
+      - name: Upload tests coverage HTML reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: tests-coverage-reports
+          path: tests-coverage/
+          retention-days: 2

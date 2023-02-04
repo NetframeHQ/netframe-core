@@ -1,0 +1,112 @@
+<?php
+return array(
+    'postOnChan' => 'publicado en el hilo de discusión',
+    'invite' => array(
+        'accept' => 'Aceptar',
+        'deny' => 'Rechazar',
+        'blacklist' => 'Bloque'
+    ),
+    'results' => 'Notificaciones',
+    'no_matching_results' => 'Ninguna notificación',
+    'ask_pending' => 'Le propone de ser amigos',
+    'ask_accepted' => 'aceptó su invitación',
+    'send_comment' => 'comentó',
+    'invite_projectCommunity' => 'Le invitó a seguir su proyecto',
+    'projectCommunity_accepted' => 'aceptó tu invitación al proyecto',
+    'checkbox_not_checked' => 'debe seleccionar por lo menos a un amigo',
+    'join_houses' => 'desea unirse a su  casa',
+    'join_community' => 'desea unirse a su  comunidad',
+    'join_project' => 'desea unirse a su  proyecto',
+    'has_join_community' => 'unido a la comunidad',
+    'has_join_project' => 'unido al proyecto',
+    'has_join_house' => 'unido a la case',
+    'accept_participant' => 'Aceptar como participante',
+    'accept_contributor' => 'Aceptar como contribuidor',
+    'refuse' => 'Niego',
+    'accept' => 'Acepto',
+    'askAngelProject' => 'pide su participación en el proyecto',
+    'accept_angel_project' => 'Acepto',
+    'join_accept' => 'ha aceptado su solicitud',
+    'the_house' => 'la casa',
+    'the_community' => 'la comunidad',
+    'the_project' => 'el proyecto',
+    'must_selected' => 'debes seleccionar por lo menos un elemento',
+    'request_send' => 'su solicitud ha sido enviada',
+    'data_exists' => 'esta demanda ya existe',
+    'as' => 'con el papel de',
+    'share' => 'compartió tu publicación ',
+    'share_profile' => 'compartió su  perfil',
+    'share_media1' => 'compartió',
+    'share_media2' => 'su medio de comunicación',
+    'media_type' => array(
+        'local' => array(
+            0 => 'su photo',
+            1 => 'su  video',
+            2 => 'su música',
+            3 => 'su  documento',
+            4 => 'su archivo'
+        ),
+        'platform' => array(
+            'youtube' => 'su video',
+            'dailymotion' => 'su video',
+            'vimoe' => 'su video',
+            'soundcloud' => 'su música'
+        )
+    ),
+    'likePost' => 'su mensaje',
+    'onPage' => 'sobre la pagina',
+    'likeProfile' => 'encanta su perfil',
+    'likeContent' => 'aprobar',
+    'followProfile' => 'sigue su  perfil',
+    'clipMedia' => 'ha tlentlist sus medios de comunicación',
+    'clipProfile' => 'ha tlentlist tu perfil',
+    'comment' => 'su commentario',
+    'commentModel' => array(
+        'News' => 'su publicación',
+        'Share' => 'su publicacíon',
+        'NetframeAction' => 'su publicacíon',
+        'TEvent' => 'su evento',
+        'Community' => 'su comunidad',
+        'House' => 'su entidad',
+        'Project' => 'tu proyecto',
+        'Talent' => 'su perfil netframe',
+        'User' => 'su perfil usuario',
+        'Netframe\\Media\\Model\\Media' => 'su medio',
+        'Media' => 'su publicación'
+    ),
+    'participateEvent' => 'asistir a su evento',
+    'inviteOn' => 'Usted ha sido invitado/da por ...como',
+    'join_channels' => 'quiere seguir su hilo de discusión',
+    'memberUpdate' => 'a cambiado su estatuo a favor de',
+    'the_channel' => 'hilo de discusión',
+    'likeReference' => 'su competencia',
+    'newReferenceByUser' => 'agregó una nueva referencia en su perfil',
+    'hasTaggued' => array(
+        'channel' => 'en un hilo de discusión',
+        'mediaComment' => 'en un comentario de medios',
+        'post' => 'en una publicacíon',
+        'postComment' => 'en un comentario de publicacíon',
+        'profileComment' => 'en un comentario de usuario',
+        'you' => 'Le ha identificado'
+    ),
+    'collab' => array(
+        'add' => 'te ha añadido al documento colaborativo',
+        'from' => 'en el proyecto'
+    ),
+    'task' => array(
+        'assign' => 'le asignó la tarea',
+        'from' => 'en el proyecto'
+    ),
+    'workflow' => array(
+        'answerValidateFileAccept' => 'validó el archivo',
+        'answerValidateFileDecline' => 'no ha validado el archivo',
+        'askValidateFile' => 'le pide que valides el siguiente archivo:',
+        'decline' => 'no validar',
+        'fileValidated' => 'El archivo es validado y publicado',
+        'reason' => 'razón',
+        'validate' => 'validar',
+        'viewFile' => 'ver el archivo',
+        'delete' => 'elimina validó del archivo : ',
+    ),
+    'on' => 'en'
+);

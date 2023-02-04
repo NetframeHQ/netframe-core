@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'manage' => [
+        'title' => [
+            'house' => 'Mes entités',
+            'project' => 'Mes projets',
+            'community' => 'Mes groupes',
+        ],
+        'activated' => 'Activé',
+        'disabled' => 'Désactivé',
+        'autoMember' => 'Rendre tous les utilisateurs membres de ce profil',
+        'autoMemberStatus' => 'Statut des membres',
+        'freeJoin' => 'Valider les utilisateurs avant des les intégrer au groupe',
+        'withPersonalFolder' => 'Créer un dossier personnel pour chaque membre',
+        'addDefaultChannel' => 'Créer un fil de discussion par défaut associé au profil',
+        'addDefaultTasks' => 'Créer une liste de tâches par défaut associé au profil',
+        'createTasksBefore' => 'Merci de créer un template pour ajouter des Tâches',
+        'createTasksTitle' => 'Choisissez un template',
+        'defaultChannelLink' => 'Votre profile dispose d\'un fil de discussion par défaut',
+        'defaultTaskLink' => 'Votre profile dispose d\'une liste de tâche par défaut',
+        'coverImage' => 'Photo de couverture',
+        'addCoverImage' => 'Ajouter une photo de couverture',
+        'searchFromUnslpash' => 'Chercher sur Unsplash',
+        'searchUnslpashTxtButton' => 'Chercher',
+        'avatar' => 'Avatar',
+        'useEmoji' => 'Utiliser un emoji comme avatar',
+        'uploadAvatar' => 'Ajouter un avatar',
+        'resetAvatar' => 'Supprimer l\'avatar',
+        'uploadLogo' => 'Ajouter un logo',
+        'resetLogo' => 'Supprimer le logo',
+    ],
+    'roles' => [
+        'Owner' => 'Propriétaire',
+        'Administrator' => 'Administrateur',
+        'Moderator' => 'Modérateur',
+        'Contributor' => 'Contributeur',
+        'Participant' => 'Participant',
+    ],
+];

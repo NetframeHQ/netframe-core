@@ -1,0 +1,56 @@
+/* Clears the media thumbnail columns */
+#content-wrapper .col-sm-4:nth-child(3n+1){
+    clear: left;
+}
+
+.mediaThumbnail {
+    cursor: pointer;
+    cursor: hand;
+    height: 200px;
+}
+
+.mediaThumbnail .audiojs {
+    width: 160px;
+    font-size: 10px;
+    z-index: 10 !important;
+}
+
+.mediaThumbnail .audiojs .scrubber {
+    width: 30px;
+}
+
+.mediaThumbnail .audiojs .time {
+    width: 30px;
+    margin: 0;
+    padding: 0 0 0 6px;
+}
+
+.mediaThumbnail a {
+    font-weight: normal;
+    color: #000000;
+}
+
+.mediaThumbnail a:hover {
+    text-decoration: none;
+    color: #337ab7;
+}
+
+.mediaThumbnail:hover {
+    background-color: #f1f1f1;
+}
+
+.selectThumb.selected .img-thumbnail{
+    background-color: #5cb85c;
+}
+
+.selectThumb{
+    position:relative;
+}
+
+.selectOverlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 5px 0 0 10px
+}

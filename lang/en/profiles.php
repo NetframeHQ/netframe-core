@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'manage' => [
+        'title' => [
+            'house' => 'My entities',
+            'project' => 'My projets',
+            'community' => 'My groups',
+        ],
+        'activated' => 'Enabled',
+        'disabled' => 'Disabled',
+        'autoMember' => 'Make all users members of this profile',
+        'autoMemberStatus' => 'Members status',
+        'freeJoin' => 'Screen users before letting them join',
+        'withPersonalFolder' => 'Create personnal folder for each member',
+        'addDefaultChannel' => 'Create default channel',
+        'addDefaultTasks' => 'Create default tasks list',
+        'createTasksBefore' => 'Please create a template to add Tasks',
+        'createTasksTitle' => 'Choose template',
+        'defaultChannelLink' => 'Default Channel',
+        'defaultTaskLink' => 'Default Tasks',
+        'coverImage' => 'Cover Picture',
+        'addCoverImage' => 'Upload Cover Picture',
+        'searchFromUnslpash' => 'Search on Unsplash',
+        'searchUnslpashTxtButton' => 'Search',
+        'avatar' => 'Avatar',
+        'useEmoji' => 'Use emoji as avatar',
+        'uploadAvatar' => 'Upload avatar',
+        'resetAvatar' => 'Reset avatar',
+        'uploadLogo' => 'Upload logo',
+        'resetLogo' => 'Reset logo',
+    ],
+    'roles' => [
+        'Owner' => 'Owner',
+        'Administrator' => 'Administrator',
+        'Moderator' => 'Moderator',
+        'Contributor' => 'Contributor',
+        'Participant' => 'Participant',
+    ],
+];

@@ -1,0 +1,61 @@
+.search{position: relative; margin: 15px 10px}
+.search-submit{position: absolute; right: 2px; top: 0; background: transparent}
+.bloc .title{font-weight: 600; font-size: 18px; padding-bottom: 20px}
+.bloc .title a.show{padding: 5px 0 0 10px; font-size: 22px}
+.hided{display: none}
+.task{min-height: 45px; border-left: 30px solid transparent; border-bottom: 1px solid #ccc5; cursor: pointer; padding: 7px 15px; border-radius: 5px; transition-duration: .2s}
+.task.row{border-left: 0}
+.task:hover{background: #ccc3}
+.task:hover ul{display: block;}
+/*.task ul{list-style: none; float: left; position: absolute; top: 0; left: 30%; display: block}
+.task li{float: left;}*/
+/*.task li a svg{margin-top: 6px}*/
+.projects .task:hover{background: #fff!important}
+.task:hover .right{background: transparent}
+.task .name, .right>div{float: left; line-height: 30px}
+.task .name{font-weight: 600; float: left;}
+.task .right{float: right; min-width: 30%; background: #fff; transition-duration: .2s}
+.task .right>div{width: 50%; display: flex; justify-content: flex-end}
+.task.sub td{font-size: 11px!important}
+a{color: #212529}
+a:hover{text-decoration: none}
+
+/*a.user{position: relative; left: -10px}*/
+a.user img{width: 25px!important; height: 25px!important; border-radius: 100%}
+a.user:hover{z-index: 10}
+.deadline a{padding: 5px}
+.main-container{padding: 15px}
+/*#modal-ajax{padding: 0 35%}*/
+.statut{padding: 2px 5px; width: auto; border-radius: 10px}
+
+
+.profiles ul{list-style: none; padding-left: 15px}
+.profiles a{width: auto; width: 100%; line-height: 48px}
+.profiles .user-pic img{border-radius: 50%; width: 48px!important; float: left; margin-right: 15px}
+
+.comment{padding-bottom: 10px}
+.date{font-size: 11px; color: #ccc; margin-left: 10px}
+.author{font-size: 13px; font-weight: bold;}
+
+table td{font-size: 14px; min-width: 150px!important}
+table td:first-child{min-width: 10px!important}
+table th span{color: grey; font-size: 11px}
+
+.tasks .item .menu-wrapper{
+    right: 30px;
+    z-index: 2;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.wrap-badge{
+	position: relative;
+}
+.badge-notif{
+	position: absolute;
+	top: 0;
+	right: 0
+}
+td.field{
+	border: 1px solid blue!important;
+}

@@ -1,0 +1,69 @@
+{
+  "builders": [
+    {
+      "type": "qemu",
+      "accelerator": "kvm",
+      "format": "qcow2",
+      "vm_name": "netframe-dev",
+
+      "disk_size": "25G",
+      "cpus": 3,
+      "memory": 6144,
+
+      "iso_url": "https://cdimage.debian.org/cdimage/release/10.7.0/amd64/iso-cd/debian-10.7.0-amd64-netinst.iso",
+      "iso_checksum": "file:https://cdimage.debian.org/cdimage/release/10.7.0/amd64/iso-cd/SHA256SUMS",
+
+      "ssh_username": "netframe",
+      "ssh_password": "netframe",
+      "ssh_timeout": "30m",
+
+      "http_directory": ".",
+      "boot_wait": "5s",
+      "boot_command": [
+        "<down><tab>",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-dev.cfg ",
+        "debconf/frontend=noninteractive cohsole-setup/ask_detect=false ",
+        "language=en locale=en_US.UTF-8 country=FR keymap=us ",
+        "hostname=devdocker domain=netframe.online ",
+        "<enter><wait>"
+      ],
+      "shutdown_command": "echo netframe | sudo -S shutdown now"
+    },
+    {
+      "type": "virtualbox-iso",
+      "guest_os_type": "Debian_64",
+      "format": "ova",
+      "vm_name": "netframe-dev",
+
+      "disk_size": 25000,
+      "cpus": 3,
+      "memory": 6144,
+
+      "iso_url": "https://cdimage.debian.org/cdimage/release/10.7.0/amd64/iso-cd/debian-10.7.0-amd64-netinst.iso",
+      "iso_checksum": "file:https://cdimage.debian.org/cdimage/release/10.7.0/amd64/iso-cd/SHA256SUMS",
+
+      "ssh_username": "netframe",
+      "ssh_password": "netframe",
+      "ssh_timeout": "30m",
+
+      "http_directory": ".",
+      "boot_wait": "5s",
+      "boot_command": [
+        "<down><tab>",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-dev.cfg ",
+        "debconf/frontend=noninteractive cohsole-setup/ask_detect=false ",
+        "language=en locale=en_US.UTF-8 country=FR keymap=us ",
+        "hostname=devdocker domain=netframe.online ",
+        "<enter><wait>"
+      ],
+      "shutdown_command": "echo netframe | sudo -S shutdown now"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "install-dev.sh",
+      "execute_command": "echo netframe | sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
+    }
+  ]
+}

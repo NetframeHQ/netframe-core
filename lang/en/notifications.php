@@ -1,0 +1,112 @@
+<?php
+return array(
+    'postOnChan' => 'posted on the channel',
+    'invite' => array(
+        'accept' => 'Accept',
+        'deny' => 'Deny',
+        'blacklist' => 'Block'
+    ),
+    'results' => 'Notifications',
+    'no_matching_results' => 'No results match your query',
+    'ask_pending' => 'send you a friend request',
+    'ask_accepted' => 'has accepted your invitation',
+    'send_comment' => 'has commented',
+    'invite_projectCommunity' => 'invited your to follow the project',
+    'projectCommunity_accepted' => 'has accepted your invitation on the project',
+    'checkbox_not_checked' => 'You must select at least one checkbox',
+    'join_houses' => 'want to join your entity',
+    'join_community' => 'want to join your group',
+    'join_project' => 'want to join your project',
+    'has_join_community' => 'has joined group',
+    'has_join_project' => 'has joined project',
+    'has_join_house' => 'has joined entity',
+    'accept_participant' => 'Accept as participant',
+    'accept_contributor' => 'Accept as contributor',
+    'refuse' => 'Refuse',
+    'accept' => 'Accept',
+    'askAngelProject' => 'has requested your participation in the project',
+    'accept_angel_project' => 'accepted',
+    'join_accept' => 'has accepted your demand',
+    'the_house' => 'The entity',
+    'the_community' => 'The group',
+    'the_project' => 'The project',
+    'must_selected' => 'You must select at least one checkbox',
+    'request_send' => 'Your request is send',
+    'data_exists' => 'this data exists in database',
+    'as' => 'as',
+    'share' => 'share your post',
+    'share_profile' => 'share your profile',
+    'share_media1' => 'share',
+    'share_media2' => 'your media',
+    'media_type' => array(
+        'local' => array(
+            0 => 'your photo',
+            1 => 'your video',
+            2 => 'your music',
+            3 => 'your document',
+            4 => 'your archive'
+        ),
+        'platform' => array(
+            'youtube' => 'your video',
+            'dailymotion' => 'your video',
+            'vimoe' => 'your video',
+            'soundcloud' => 'your music'
+        )
+    ),
+    'likePost' => 'your post',
+    'onPage' => 'on his page',
+    'likeProfile' => 'likes your profile',
+    'likeContent' => 'likes',
+    'followProfile' => 'is following your profile',
+    'clipMedia' => 'tlentlisted your media',
+    'clipProfile' => 'tlentlisted your profile',
+    'comment' => 'your comment',
+    'commentModel' => array(
+        'News' => ' your post',
+        'Share' => 'your post',
+        'NetframeAction' => 'your post',
+        'TEvent' => 'your event',
+        'Community' => 'your group',
+        'House' => 'your entity',
+        'Project' => 'your project',
+        'Talent' => 'your netframe profile',
+        'User' => 'your user profile',
+        'Netframe\\Media\\Model\\Media' => 'your media',
+        'Media' => 'your media'
+    ),
+    'participateEvent' => 'attend your event',
+    'inviteOn' => 'You are guest as :',
+    'join_channels' => 'wants to join you channel',
+    'memberUpdate' => 'has changed his/her status to become :',
+    'the_channel' => 'channel',
+    'likeReference' => 'your reference',
+    'newReferenceByUser' => 'added a new reference on your profile',
+    'workflow' => array(
+        'askValidateFile' => ' ask you to validate following file :',
+        'viewFile' => 'View file',
+        'validate' => 'Validate',
+        'decline' => 'Decline',
+        'reason' => 'Reason',
+        'answerValidateFileAccept' => ' has validate file ',
+        'answerValidateFileDecline' => ' hasn\'t validate ',
+        'fileValidated' => 'File is validated and published',
+        'delete' => 'deleted file validation : ',
+    ),
+    'hasTaggued' => array(
+        'channel' => 'in a thread',
+        'mediaComment' => 'in a media comment',
+        'post' => 'tagged post',
+        'postComment' => 'post comment',
+        'profileComment' => 'comment profile',
+        'you' => 'has tagged you'
+    ),
+    'task' => array(
+        'assign' => 'has assigned you the task',
+        'from' => 'within the project'
+    ),
+    'collab' => array(
+        'add' => 'has added you to the collaborative document',
+        'from' => 'in the project'
+    ),
+    'on' => 'on'
+);
