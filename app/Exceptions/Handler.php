@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
     {
         // sending email
         try {
-            $html = ExceptionHandler::convertExceptionToResponse($exception);
+            $html = ExceptionHandler::renderExceptionWithCustomRenderer($exception);
 
             if (env('APP_ENV') == 'production') {
                 Mail::to(env('ERROR_EMAIL', 'tech@netframe.fr'))->send(new ExceptionOccured($html));

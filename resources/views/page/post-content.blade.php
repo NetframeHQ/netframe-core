@@ -3,7 +3,6 @@
   @php
     $object = $post->post;
     //Post viewed by current user
-    // dump(get_class($post));
     $post->view();
   @endphp
 
@@ -194,7 +193,7 @@
                           </span>
                         </a>
                       @else
-                        <a class="nf-btn" href="{{ url()->route('form.share', ['idNewsfeed' => $post->id, 'idShare' => $post->post_id]) }}" data-toggle="modal" data-target="#modal-ajax">
+                        <a class="nf-btn" href="{{ url()->route('form.share', ['idNewsFeed' => $post->id, 'idShare' => $post->post_id]) }}" data-toggle="modal" data-target="#modal-ajax">
                           <span class="btn-txt">
                             {{ trans('netframe.edit') }}
                           </span>
@@ -470,8 +469,8 @@
 
         <!-- VIEW BUTTON -->
         @php
-            $postViews = $post->views()->limit(5)->get();
-            $viewsCount = $post->views()->count();
+            $postViews = $post->views()->groupBy('users_id')->limit(5)->get();
+            $viewsCount = $post->views()->distinct('users_id')->count();
         @endphp
         @if($viewsCount > 0)
           <div class="nf-post-actions nf-action-view">

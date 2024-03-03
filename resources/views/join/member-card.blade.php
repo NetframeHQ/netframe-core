@@ -24,7 +24,7 @@
             $concernedMember = $profile;
         }
     @endphp
-    @if($concernedMember->id != auth()->guard('web')->user()->id || class_basename($concernedMember != 'User'))
+    @if(($concernedMember->id != auth()->guard('web')->user()->id || class_basename($concernedMember != 'User')) && !isset($fromStats))
         <ul class="nf-actions">
             @if((class_basename($concernedMember) == 'User' && $profile->active == 0) || $member->active == 0)
                 <li class="nf-action">
@@ -66,7 +66,7 @@
                         </span>
                     </a>
                     <div class="submenu-container submenu-right">
-                        <ul class="submenu fn-right-management" data-target-return=".member-{{ $member->id }}">
+                        <ul class="submenu" data-target-return=".member-{{ $member->id }}">
                             @if(class_basename($profile) != 'Instance' && isset($concernedMember->pivot))
                                 @if($concernedMember->pivot->status == 0)
                                     {{--

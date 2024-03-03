@@ -9,9 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {{ HTML::script('assets/js/modernizr.custom-2.8.3.js') }}
-
-    {{ HTML::favicon() }}
-
     {{ HTML::style('assets/css/bootstrap.css') }}
     {{ HTML::style('assets/css/animate.css') }}
     {{ HTML::style('assets/css/socicon.css') }}

@@ -1,0 +1,8 @@
+imagesRegistryUrl: "kz91436x.gra7.container-registry.ovh.net/netframe"
+environment: "production"
+appProtocol: "https"
+acmeEmail: "tech@netframe.fr"
+appStorageNetframe: "200Gi"
+appReplicasNetframe: 3
+appReplicasBroadcast: 1 # more than two broadcast servers enables sticky sessions, but it makes some broadcast requests fail
+appReplicasCollab: 1 # more than two collab servers has never been tested

@@ -7,13 +7,13 @@
         </a>
         <div class="submenu-container submenu-right">
             <ul class="submenu">
-				<li>
-					<a href="{{ url()->route('media.details', ['id' => $media->id]) }}" data-toggle="modal" data-target="#modal-ajax" class="nf-btn">
-						<span class="btn-txt">
-							{{ trans('xplorer.file.menu.details') }}
-						</span>
-					</a>
-				</li>
+                <li>
+                    <a href="{{ url()->route('media.details', ['id' => $media->id]) }}" data-toggle="modal" data-target="#modal-ajax" class="nf-btn">
+                        <span class="btn-txt">
+                            {{ trans('xplorer.file.menu.details') }}
+                        </span>
+                    </a>
+                </li>
                 <li>
                     <a class="nf-btn" href="{{ url()->route('media_download', ['id' => $media->id]) }}">
                         <span class="btn-txt">

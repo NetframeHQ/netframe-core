@@ -98,6 +98,12 @@
                     </li>--}}
                     <li class="sep"></li>
                     <li>
+                        <a class="nf-settings-link {{(url()->current() == url()->route('instance.stats')) ? 'active' : '' }}" href="{{ url()->route('instance.stats') }}">
+                            {{ trans('instances.menu.stats') }}
+                        </a>
+                    </li>
+                    <li class="sep"></li>
+                    <li>
                         <a class="nf-settings-link {{(url()->current() == url()->route('instance.subscription')) ? 'active' : '' }}" href="{{ url()->route('instance.subscription') }}">
                             {{ trans('instances.menu.subscription') }}
                         </a>

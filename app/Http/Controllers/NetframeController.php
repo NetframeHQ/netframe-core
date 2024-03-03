@@ -41,6 +41,7 @@ use App\Events\CheckUserTag;
 use App\Instance;
 use App\Application;
 use App\Emoji;
+use App\Repository\NotificationsRepository;
 
 /*
 use Predis\Session\SessionHandler;
@@ -1815,6 +1816,35 @@ class NetframeController extends BaseController
         }
     }
 
+    /*
+     * User portal
+     */
+    public function portal()
+    {
+        $data = [
+            'dataUser' => auth()->user(),
+        ];
+
+        // add notifications
+        $notificationsRepository = new NotificationsRepository();
+
+        if (request()->has('limit')) {
+            $start = request()->get('limit') * 20;
+            $limit = [$start, 20];
+            $view = 'notifications.results-details';
+        } else {
+            $limit = null;
+            $view = 'notifications.results';
+        }
+
+        Notif::markReadForUser();
+
+        $data['results'] = $notificationsRepository->findWaiting($limit);
+        $data['profile'] = auth()->guard('web')->user();
+
+        return view('portal.home', $data);
+    }
+
     /**
      * get all news from newsfeed
      */
@@ -1873,6 +1903,7 @@ class NetframeController extends BaseController
         if (request()->isMethod('GET')) {
             return View('netframe.tout-netframe', $data);
         } elseif (request()->isMethod('POST')) {
+            $data['withLoader'] = true;
             $view = view('page.post-container', $data)->render();
             return response()->json(['view' => $view]);
         }

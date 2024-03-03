@@ -1,11 +1,13 @@
 <?php
 
 return array (
-  'contacts' => 'contacts',
+  'contacts' => 'Contacts',
   'cgv' => 'Conditions Générales de vente',
-  'cgu' => 'conditions générales d\'utilisation',
+  'cgu' => 'Conditions générales d\'utilisation',
   'faq' => 'F.A.Q.',
   'faqShort' => 'aide',
   'partenaires' => 'partenaires',
   'carrieres' => 'nous rejoindre',
+  'boarding' => 'Essai gratuit',
+  'login' => 'Connexion',
 );

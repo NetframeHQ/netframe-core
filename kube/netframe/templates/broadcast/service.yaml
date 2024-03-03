@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: {{ .Chart.Name }}-broadcast
+  namespace: {{ .Release.Namespace | quote }}
+
+  {{- if gt (int .Values.appReplicasBroadcast) 1 }}
+  annotations:
+    ingress.appscode.com/affinity: "cookie"
+  {{- end }}
+
+  labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 4 }}
+    app.kubernetes.io/component: "broadcast"
+    app.kubernetes.io/version: {{ required "Value appVersionBroadcast is required" .Values.appVersionBroadcast | quote }}
+
+spec:
+  ports:
+    - port: 6001
+      protocol: TCP
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: {{ .Chart.Name | quote }}
+    app.kubernetes.io/component: "broadcast"

@@ -1,0 +1,113 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: database
+  namespace: netframe-local
+  labels:
+    app: database
+    environment: local
+spec:
+  ports:
+    - port: 3306
+      protocol: TCP
+  clusterIP: None
+  selector:
+    app: database
+    environment: local
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-files
+  namespace: netframe-local
+  labels:
+    app: database
+    environment: local
+data:
+  my.cnf: |
+    [mysqld]
+    character-set-server = utf8mb4
+    collation-server = utf8mb4_general_ci
+    skip-character-set-client-handshake
+    max_connections = 10
+    query_cache_size = 512K
+    thread_cache_size = 0
+    sort_buffer_size = 32K
+    bulk_insert_buffer_size = 0
+    tmp_table_size = 1K
+    max_heap_table_size = 16K
+    key_buffer_size = 1M
+    read_buffer_size = 8K
+    read_rnd_buffer_size = 8K
+    innodb_buffer_pool_size = 10M
+    innodb_log_buffer_size = 512K
+    [mysql]
+    default-character-set = utf8mb4
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netframe-database
+  namespace: netframe-local
+  labels:
+    app: database
+    environment: local
+spec:
+  selector:
+    matchLabels:
+      app: database
+      environment: local
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      namespace: netframe-local
+      labels:
+        app: database
+        environment: local
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 10
+      containers:
+        - image: mariadb:10.3.27
+          name: database
+          args: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_general_ci"]
+          env:
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: database
+                  key: database
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: database
+                  key: user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: root-password
+          volumeMounts:
+            - name: config
+              mountPath: "/etc/mysql/conf.d"
+              readOnly: true
+            - name: data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: config
+          configMap:
+            name: database-files
+            items:
+              - key: "my.cnf"
+                path: "my.cnf"
+        - name: data
+          hostPath:
+            path: /data/netframe/database
+            type: DirectoryOrCreate

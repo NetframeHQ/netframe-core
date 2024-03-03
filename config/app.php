@@ -52,6 +52,7 @@ return [
     */
 
     'url' => env('APP_URL', 'https://work.netframe.co'),
+    'broadcastUrl' => env('BROADCAST_SUBDOMAIN', 'broadcast1'),
     'protocol' => env('APP_BASE_PROTOCOL', 'https'),
 
     /*

@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: search
+  namespace: netframe-local
+  labels:
+    app: search
+    environment: local
+spec:
+  ports:
+    - port: 9200
+      protocol: TCP
+  clusterIP: None
+  selector:
+    app: search
+    environment: local
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netframe-search
+  namespace: netframe-local
+  labels:
+    app: search
+    environment: local
+spec:
+  selector:
+    matchLabels:
+      app: search
+      environment: local
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      namespace: netframe-local
+      labels:
+        app: search
+        environment: local
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 10
+      securityContext:
+        fsGroup: 1000 # this is elasticsearch GID in the Docker ElasticSearch image
+        fsGroupChangePolicy: Always
+      initContainers:
+        - name: netframe-search-init-rights
+          image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.0.1
+          command:
+            - "/bin/sh"
+            - "-c"
+            - "chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data"
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+      containers:
+        - image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.0.1
+          name: search
+          env:
+            - name: "cluster.name"
+              value: "search"
+            - name: "discovery.type"
+              value: "single-node"
+            - name: "node.name"
+              value: "search01"
+            - name: "ES_JAVA_OPTS"
+              value: "-Xms128m -Xmx128m"
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+      volumes:
+        - name: data
+          hostPath:
+            path: /data/netframe/search
+            type: DirectoryOrCreate

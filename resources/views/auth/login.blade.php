@@ -22,7 +22,7 @@
             @if(isset($instanceLogoDark))
                 <img src="{{ $instanceLogoDark }}" class="img-fluid center-block menu-logo-dark {{ (isset($disableCssMode)) ? $disableCssMode : '' }}">
             @else
-                <img src="{{ asset('assets/img/widget-logo.png') }}" class="img-fluid center-block menu-logo-dark {{ (isset($disableCssMode)) ? $disableCssMode : '' }}">
+                <img src="{{ asset('assets/img/widget-logo-dark.png') }}" class="img-fluid center-block menu-logo-dark {{ (isset($disableCssMode)) ? $disableCssMode : '' }}">
             @endif
         </div>
 
@@ -77,6 +77,6 @@
     </div>
     <button type="submit" class="login-submit">{{ trans('auth.btn_login') }}</button>
 {{ Form::close() }}
-@include('static.links')
 </div>
+@include('static.links')
 @stop

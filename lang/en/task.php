@@ -21,7 +21,7 @@ return [
     "confirmDuplicate" => "Do you want to duplicate this element?",
     "editTemplates" => "Edit templates",
     "already" => "This project name already exists",
-    "switch" => "Tasks",
+    "switch" => "Enable task assignment to users",
     "invalid" => "Invalid value",
     "requiredName" => "The field name is required",
     "cantDelete" => "This template can't be deleted, projects are attached",
@@ -88,5 +88,12 @@ return [
         'status' => 'Status',
         'userInfos' => 'User(s) / infos',
         'delay' => 'Deadline',
+    ],
+    'sample' => [
+        'title' => 'Exemple',
+        'colTxt' => 'Column 1 (text)',
+        'colEmail' => 'Column 2 (email)',
+        'colDate' => 'Column 3 (date)',
+        'colFile' => 'Column 4 (file)',
     ],
 ];

@@ -1,8 +1,6 @@
-{{--
-<!-- @if($activeMap && $gdpr_agrement && $post->post->location != null)
+@if($activeMap && $gdpr_agrement && $post->post->location != null)
     <div class="panel-event-map" data-latitude="{{ $post->post->latitude }}" data-longitude="{{ $post->post->longitude }}"></div>
-@endif -->
---}}
+@endif
 
 <div class="panel-event-head">
     <div class="panel-event-date">

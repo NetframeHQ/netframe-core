@@ -49,6 +49,17 @@ INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (4, 'Contributor', '2015-02-25 17:04:52', '2015-02-25 17:04:52'),
 (5, 'Participant', '2015-02-25 17:04:52', '2015-02-25 17:04:52');
 
+--
+-- Contenu de la table `workflow_actions`
+--
+
+INSERT INTO `workflow_actions` (`id`, `object_type`, `action_type`, `display_order`, `notif_slug`, `group_action`, `action_view`, `active`, `is_final_action`, `created_at`, `updated_at`) VALUES
+(1, 'Media', 'group_valid', 1, 'askValidateFile', 0, 'choose-contacts-group', 1, 0, '2019-05-20 15:58:00', '2019-05-20 15:58:00'),
+(2, 'Media', 'user_valid', 2, 'askValidateFile', 0, 'choose-contact', 1, 0, '2019-05-20 15:58:00', '2019-05-20 15:58:00'),
+(3, 'Media', 'destination_folder', 3, NULL, 0, 'destination-folder', 1, 0, '2019-05-20 15:58:00', '2019-05-20 15:58:00'),
+(4, 'Media', 'publish_file', 5, 'fileValidated', 0, 'publish-file', 1, 1, '2019-05-20 15:58:00', '2019-05-20 15:58:00'),
+(5, 'Media', 'lock_file', 4, NULL, 0, 'lock-file', 1, 0, '2019-05-20 15:58:00', '2019-05-20 15:58:00');
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

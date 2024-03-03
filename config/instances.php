@@ -1,6 +1,16 @@
 <?php
 
 return [
+    'reservedSubDomains' => [
+        'work',
+        'broadcast',
+        'broadcast1',
+        'encode',
+        'drive-connect',
+        'visio',
+        'hv',
+        'www',
+    ],
     'default_config' => [
         'boarding_domain' => null,      // email domain provide boarding
         'boarding_invite_key' => null,  // key to provide boarding

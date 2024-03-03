@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: netframe-local
+  labels:
+    app: netframe
+    environment: local

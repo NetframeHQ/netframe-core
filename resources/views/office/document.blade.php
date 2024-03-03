@@ -41,7 +41,7 @@
                 "title": "{{$document->name}}",
                 "url": "{{ env('ONLYOFFICE_IP_ADDRESS')!=null
                     ? "https://".env('ONLYOFFICE_IP_ADDRESS').url()->route('office.download',['mediaId' => $document->id], false)."?s=".$user->slug
-                    : url()->route('office.download',['documentId'=>$document->id])."?s=".$user->slug
+                    : url()->route('office.download',['mediaId'=>$document->id])."?s=".$user->slug
                 }}",
             },
             "documentType": "{{$document->getDocumentType()}}",

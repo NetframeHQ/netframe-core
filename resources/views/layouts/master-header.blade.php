@@ -16,7 +16,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="@yield('ogtitle', 'netframe')">
     <meta property="og:description" content="@yield('ogdescription', 'netframe' )">
-    <meta property="og:image" content="@yield('ogimage', '//www.netframe.com/assets/img/logo-full.png')">
+    <meta property="og:image" content="@yield('ogimage', env('APP_URL') . '/assets/img/logo-full.png')">
 
     @include('layouts.partials.scripts-header')
 </head>

@@ -33,6 +33,13 @@ class ProfileController extends BaseController
         $this->searchRepository = $searchRepository;
     }
 
+    public function onePost($idNewsFeed, $profileId, $profileType)
+    {
+        $profileModel = Profile::gather($profileType);
+        $profile = $profileModel::findOrFail($profileId);
+        $data['newsfeed'] = NewsFeed::getByProfileMorph($profileId, $profileType, $profile, null, $idNewsFeed);
+    }
+
     public function timeline()
     {
         $dataUser = User::findOrFail(auth()->guard('web')->user()->id);
@@ -78,9 +85,9 @@ class ProfileController extends BaseController
             */
 
             $events = new TEvent();
-            $data['newEvents'] = $events->nextOrLast(2);
-            $data['lastNews'] = NewsFeed::lastNews('News', 2);
-            $data['lastActions'] = NewsFeed::lastNews('NetframeAction', 2);
+            //$data['newEvents'] = $events->nextOrLast(2);
+            //$data['lastNews'] = NewsFeed::lastNews('News', 2);
+            //$data['lastActions'] = NewsFeed::lastNews('NetframeAction', 2);
             $data['calendarView'] = 'timeline';
             $data['canPostOnTimeline'] = $canPostOnTimeline;
 
@@ -108,6 +115,7 @@ class ProfileController extends BaseController
         $data['unitPost'] = false;
         $data['newsfeed'] = $newsfeed;
         $data['rights'] = $this->Acl->getRights('user', $dataUser->id);
+        $data['withLoader'] = true;
 
         //return view('page.post-container', $data)->render();
         $view = view('page.post-container', $data)->render();
@@ -169,6 +177,19 @@ class ProfileController extends BaseController
         } else {
             $data['liked'] = false;
             $data['friends'] = '';
+        }
+
+        if (request()->has('fromAjax')) {
+            $data['unitPost'] = false;
+            $data['post'] = $data['newsfeed'][0];
+            $ajaxReturn = [
+                'containerId' => '#' .
+                    class_basename($data['post']->post) .'-'.
+                    class_basename($data['post']->author) .'-'.
+                    $data['post']->post_id,
+                'view' => view('page.post-content', $data)->render(),
+            ];
+            return response()->json($ajaxReturn);
         }
 
         return view('page.feed-user', $data);

@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: {{ .Chart.Name }}-collab
+  namespace: {{ .Release.Namespace | quote }}
+
+  labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 4 }}
+    app.kubernetes.io/component: "collab"
+    app.kubernetes.io/version: {{ required "Value appVersionCollab is required" .Values.appVersionCollab | quote }}
+
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name | quote }}
+      app.kubernetes.io/component: "collab"
+  replicas: {{ .Values.appReplicasCollab | default 1 }}
+  revisionHistoryLimit: 2
+
+  template:
+    metadata:
+      namespace: {{ .Chart.Name }}
+      labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 8 }}
+        app.kubernetes.io/component: "collab"
+        app.kubernetes.io/version: {{ required "Value appVersionCollab is required" .Values.appVersionCollab | quote }}
+
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: {{ .Chart.Name }}-collab
+          image: {{ required "Value imagesRegistryUrl is required" .Values.imagesRegistryUrl }}/collab:{{ required "Value appVersionCollab is required" .Values.appVersionCollab }}
+          ports:
+            - containerPort: 80
+          env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-external
+                  key: database-host
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-external
+                  key: database-database
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-external
+                  key: database-user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-external
+                  key: database-password
+      imagePullSecrets:
+        - name: {{ .Chart.Name }}-registry

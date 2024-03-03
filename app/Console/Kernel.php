@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         'App\Console\Commands\GenerateEmojis',
         'App\Console\Commands\GenerateInstancesCss',
+        'App\Console\Commands\GenerateStats',
         'App\Console\Commands\SendReminders',
         'App\Console\Commands\SendNotifMails',
         'App\Console\Commands\ResetJoinNotifs',

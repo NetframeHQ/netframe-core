@@ -124,13 +124,18 @@
                                 </a>
                             </li>
                         @endforeach
+                        <li class="sep"></li>
+                        <li>
+                            <a class="nf-settings-link {{(isset($statPage)) ? 'active' : '' }}"
+                                href="{{ url()->route('profile.stats', ['profileType' => 'house', 'profileId' => $house->id]) }}">{{ trans('stats.title') }}</a>
+                        </li>
 
                         <li class="sep"></li>
                         <li>
                             @if($house->id != null)
                                 <a
-                                    class="fn-confirm-delete-get nf-settings-link {{(url()->current() == url()->Route('profile.disable', ['profiteType' => 'house', 'profileId' => $house->id, 'active' => ($house->active == 0) ? 1 : 0 ])) ? 'active' : '' }}"
-                                    href="{{ url()->Route('profile.disable', ['profiteType' => 'house', 'profileId' => $house->id, 'active' => ($house->active == 0) ? 1 : 0 ]) }}"
+                                    class="fn-confirm-delete-get nf-settings-link {{(url()->current() == url()->Route('profile.disable', ['profileType' => 'house', 'profileId' => $house->id, 'active' => ($house->active == 0) ? 1 : 0 ])) ? 'active' : '' }}"
+                                    href="{{ url()->Route('profile.disable', ['profileType' => 'house', 'profileId' => $house->id, 'active' => ($house->active == 0) ? 1 : 0 ]) }}"
                                     data-txtconfirm="{{ ($house->active == 0) ? trans('house.activation.confirmEnable') : trans('house.activation.confirmDisable') }}"
                                 >
                                     {{ ($house->active == 0) ? trans('house.activation.enable') : trans('house.activation.disable') }}

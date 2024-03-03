@@ -18,6 +18,8 @@ use App\TEvent;
 use App\Events\InterestAction;
 use App\Instance;
 use App\Friends;
+use Carbon\Carbon;
+use App\Helpers\StatsHelper;
 
 class PageController extends BaseController
 {
@@ -114,6 +116,19 @@ class PageController extends BaseController
             session()->flash('profileDisplay', 'project');
             session()->flash('profileDisplayId', $project->id);
 
+            if (request()->has('fromAjax')) {
+                $data['unitPost'] = false;
+                $data['post'] = $data['newsfeed'][0];
+                $ajaxReturn = [
+                    'containerId' => '#' .
+                        class_basename($data['post']->post) .'-'.
+                        class_basename($data['post']->author) .'-'.
+                        $data['post']->post_id,
+                    'view' => view('page.post-content', $data)->render(),
+                ];
+                return response()->json($ajaxReturn);
+            }
+
             return view('page.publish', $data);
         }
     }
@@ -185,6 +200,19 @@ class PageController extends BaseController
             session()->flash('profileDisplay', 'house');
             session()->flash('profileDisplayId', $house->id);
 
+            if (request()->has('fromAjax')) {
+                $data['unitPost'] = false;
+                $data['post'] = $data['newsfeed'][0];
+                $ajaxReturn = [
+                    'containerId' => '#' .
+                        class_basename($data['post']->post) .'-'.
+                        class_basename($data['post']->author) .'-'.
+                        $data['post']->post_id,
+                    'view' => view('page.post-content', $data)->render(),
+                ];
+                return response()->json($ajaxReturn);
+            }
+
             return view('page.publish', $data);
         }
     }
@@ -254,6 +282,19 @@ class PageController extends BaseController
 
             session()->flash('profileDisplay', 'community');
             session()->flash('profileDisplayId', $community->id);
+
+            if (request()->has('fromAjax')) {
+                $data['unitPost'] = false;
+                $data['post'] = $data['newsfeed'][0];
+                $ajaxReturn = [
+                    'containerId' => '#' .
+                        class_basename($data['post']->post) .'-'.
+                        class_basename($data['post']->author) .'-'.
+                        $data['post']->post_id,
+                    'view' => view('page.post-content', $data)->render(),
+                ];
+                return response()->json($ajaxReturn);
+            }
 
             return view('page.publish', $data);
         }
@@ -369,8 +410,8 @@ class PageController extends BaseController
         $data['unitPost'] = false;
         $data['newsfeed'] = $newsfeed;
         $data['rights'] = $this->Acl->getRights($profile_type, $profile_id);
+        $data['withLoader'] = true;
 
-        //return view('page.post-container', $data)->render();
         $view = view('page.post-container', $data)->render();
         return response()->json(['view' => $view]);
     }
@@ -584,7 +625,7 @@ class PageController extends BaseController
         $profile = Profile::gather($profileType)->find($profileId);
 
         if (empty($profile)) {
-            return view('errors.404');
+            return response(view('errors.404'), 404);
         }
 
         $data = array();
@@ -617,7 +658,7 @@ class PageController extends BaseController
         $rights = $this->Acl->getRights($profileType, $profileId);
 
         if (!$rights || $rights >= 3) {
-            return view('errors.404');
+            return response(view('errors.403'), 403);
         }
 
         $profileModel = Profile::gather($profileType);
@@ -636,5 +677,335 @@ class PageController extends BaseController
         sleep(1);
 
         return redirect()->to($profile->getUrl());
+    }
+
+    public function stats($profileType, $profileId, $period = 7)
+    {
+        //check rights
+        $rights = $this->Acl->getRights($profileType, $profileId);
+
+        if (!$rights || $rights >= 3) {
+            return response(view('errors.403'), 403);
+        }
+
+        $profileModel = Profile::gather($profileType);
+        $profile = $profileModel::find($profileId);
+
+        // manage period
+        $endInterval = Carbon::now()
+            ->format('Y-m-d');
+        $startInterval = Carbon::now()
+            ->subDays($period)
+            ->format('Y-m-d');
+        $startPreviousInterval = Carbon::now()
+            ->subDays($period*2)
+            ->format('Y-m-d');
+
+        $newUsers = $profile->stats()
+            ->where('day', '>=', $startInterval)
+            ->where('day', '<=', $endInterval)
+            ->where('stat_type', '=', 'users')
+            ->sum('counter');
+        $instancePreviewNewUsers = $profile->stats()
+            ->where('day', '>=', $startPreviousInterval)
+            ->where('day', '<=', $startInterval)
+            ->where('stat_type', '=', 'users')
+            ->sum('counter');
+
+        $users = $profile->validatedUsers()->count();
+        $news = $profile->posts()->count();
+        $events = $profile->events()->count();
+        $offers = $profile->offers()->count();
+        $medias = $profile->medias()->count();
+
+        $views = $profile->stats()
+            ->where('stat_type', '=', 'post')
+            ->sum('counter');
+        $comments = $profile->stats()
+            ->where('stat_type', '=', 'comments')
+            ->sum('counter');
+        $likes = $profile->stats()
+            ->where('stat_type', '=', 'likes')
+            ->sum('counter');
+
+        $newNews = $profile->posts()
+            ->where('post_type', '=', 'App\\News')
+            ->where('created_at', '>=', $startInterval)
+            ->where('created_at', '<=', $endInterval)
+            ->count();
+        $newEvents = $profile->posts()
+            ->where('post_type', '=', 'App\\TEvent')
+            ->where('created_at', '>=', $startInterval)
+            ->where('created_at', '<=', $endInterval)
+            ->count();
+        $newOffers = $profile->posts()
+            ->where('post_type', '=', 'App\\Offer')
+            ->where('created_at', '>=', $startInterval)
+            ->where('created_at', '<=', $endInterval)
+            ->count();
+        $newMedias = $profile->medias()
+            ->where('created_at', '>=', $startInterval)
+            ->where('created_at', '<=', $endInterval)
+            ->count();
+
+        $newPreviewNews = $profile->posts()
+            ->where('post_type', '=', 'App\\News')
+            ->where('created_at', '>=', $startPreviousInterval)
+            ->where('created_at', '<=', $startInterval)
+            ->count();
+        $newPreviewOffers = $profile->posts()
+            ->where('post_type', '=', 'App\\Offer')
+            ->where('created_at', '>=', $startPreviousInterval)
+            ->where('created_at', '<=', $startInterval)
+            ->count();
+        $newPreviewEvents = $profile->posts()
+            ->where('post_type', '=', 'App\\TEvent')
+            ->where('created_at', '>=', $startPreviousInterval)
+            ->where('created_at', '<=', $startInterval)
+            ->count();
+        $newPreviewMedias = $profile->medias()
+            ->where('created_at', '>=', $startPreviousInterval)
+            ->where('created_at', '<=', $startInterval)
+            ->count();
+
+        // add reactions
+        $newViews = $profile->stats()
+            ->where('day', '>=', $startInterval)
+            ->where('day', '<=', $endInterval)
+            ->where('stat_type', '=', 'post')
+            ->sum('counter');
+        $newPreviewViews = $profile->stats()
+            ->where('day', '>=', $startPreviousInterval)
+            ->where('day', '<=', $startInterval)
+            ->where('stat_type', '=', 'post')
+            ->sum('counter');
+        $newComments = $profile->stats()
+            ->where('day', '>=', $startInterval)
+            ->where('day', '<=', $endInterval)
+            ->where('stat_type', '=', 'comments')
+            ->sum('counter');
+        $newPreviewComments = $profile->stats()
+            ->where('day', '>=', $startPreviousInterval)
+            ->where('day', '<=', $startInterval)
+            ->where('stat_type', '=', 'comments')
+            ->sum('counter');
+        $newLikes = $profile->stats()
+            ->where('day', '>=', $startInterval)
+            ->where('day', '<=', $endInterval)
+            ->where('stat_type', '=', 'likes')
+            ->sum('counter');
+        $newPreviewLikes = $profile->stats()
+            ->where('day', '>=', $startPreviousInterval)
+            ->where('day', '<=', $startInterval)
+            ->where('stat_type', '=', 'likes')
+            ->sum('counter');
+
+        // most active users
+        $usersIds = $profile->users()->pluck('id')->toArray();
+        $topUsersPosts = NewsFeed::select(\DB::raw('count(id)*2.5 as score, users_id'))
+            ->whereIn('users_id', $usersIds)
+            ->where('author_type', '=', get_class($profile))
+            ->where('author_id', '=', $profile->id)
+            ->where('created_at', '>=', $startInterval)
+            ->where('created_at', '<=', $endInterval)
+            ->groupBy('users_id')
+            ->get();
+        // comments per user = *2
+        $topUsersCommentsNews = $profile->posts()
+            ->select(\DB::raw('count(comments.id)*2 as score, comments.users_id'))
+            ->leftJoin('news', 'news.id', '=', 'news_feeds.post_id')
+            ->leftJoin('comments', 'comments.post_id', '=', 'news.id')
+            ->whereIn('comments.users_id', $usersIds)
+            ->where('news_feeds.post_type', '=', 'App\\News')
+            ->where('comments.post_type', '=', 'App\\News')
+            ->where('comments.created_at', '>=', $startInterval)
+            ->where('comments.created_at', '<=', $endInterval)
+            ->groupBy('comments.users_id')
+            ->get();
+        $topUsersCommentsOffers = $profile->posts()
+            ->select(\DB::raw('count(comments.id)*2 as score, comments.users_id'))
+            ->leftJoin('offers', 'offers.id', '=', 'news_feeds.post_id')
+            ->leftJoin('comments', 'comments.post_id', '=', 'offers.id')
+            ->whereIn('comments.users_id', $usersIds)
+            ->where('news_feeds.post_type', '=', 'App\\Offer')
+            ->where('comments.post_type', '=', 'App\\Offer')
+            ->where('comments.created_at', '>=', $startInterval)
+            ->where('comments.created_at', '<=', $endInterval)
+            ->groupBy('comments.users_id')
+            ->get();
+        $topUsersCommentsEvents = $profile->posts()
+            ->select(\DB::raw('count(comments.id)*2 as score, comments.users_id'))
+            ->leftJoin('events', 'events.id', '=', 'news_feeds.post_id')
+            ->leftJoin('comments', 'comments.post_id', '=', 'events.id')
+            ->whereIn('comments.users_id', $usersIds)
+            ->where('news_feeds.post_type', '=', 'App\\TEvent')
+            ->where('comments.post_type', '=', 'App\\Event')
+            ->where('comments.created_at', '>=', $startInterval)
+            ->where('comments.created_at', '<=', $endInterval)
+            ->groupBy('comments.users_id')
+            ->get();
+        //@TODO add media comments
+        // likes per user = *0.5
+        $topUsersLikesNews = $profile->posts()
+            ->select(\DB::raw('count(likes.id)*0.5 as score, likes.users_id'))
+            ->leftJoin('news', 'news.id', '=', 'news_feeds.post_id')
+            ->leftJoin('likes', 'likes.liked_id', '=', 'news.id')
+            ->whereIn('likes.users_id', $usersIds)
+            ->where('news_feeds.post_type', '=', 'App\\News')
+            ->where('likes.liked_type', '=', 'App\\News')
+            ->where('likes.created_at', '>=', $startInterval)
+            ->where('likes.created_at', '<=', $endInterval)
+            ->groupBy('likes.users_id')
+            ->get();
+        $topUsersLikesOffers = $profile->posts()
+            ->select(\DB::raw('count(likes.id)*0.5 as score, likes.users_id'))
+            ->leftJoin('offers', 'offers.id', '=', 'news_feeds.post_id')
+            ->leftJoin('likes', 'likes.liked_id', '=', 'offers.id')
+            ->whereIn('likes.users_id', $usersIds)
+            ->where('news_feeds.post_type', '=', 'App\\Offer')
+            ->where('likes.liked_type', '=', 'App\\Offer')
+            ->where('likes.created_at', '>=', $startInterval)
+            ->where('likes.created_at', '<=', $endInterval)
+            ->groupBy('likes.users_id')
+            ->get();
+        $topUsersLikesEvents = $profile->posts()
+            ->select(\DB::raw('count(likes.id)*0.5 as score, likes.users_id'))
+            ->leftJoin('events', 'events.id', '=', 'news_feeds.post_id')
+            ->leftJoin('likes', 'likes.liked_id', '=', 'events.id')
+            ->whereIn('likes.users_id', $usersIds)
+            ->where('news_feeds.post_type', '=', 'App\\TEvent')
+            ->where('likes.liked_type', '=', 'App\\Event')
+            ->where('likes.created_at', '>=', $startInterval)
+            ->where('likes.created_at', '<=', $endInterval)
+            ->groupBy('likes.users_id')
+            ->get();
+
+        // shares per user = *1.5
+        $topUsersSharesNews = $profile->posts()
+            ->select(\DB::raw('count(shares.id)*0.5 as score, shares.users_id'))
+            ->leftJoin('news', 'news.id', '=', 'news_feeds.post_id')
+            ->leftJoin('shares', 'shares.post_id', '=', 'news.id')
+            ->whereIn('shares.users_id', $usersIds)
+            ->where('news_feeds.post_type', '=', 'App\\News')
+            ->where('shares.post_type', '=', 'App\\News')
+            ->where('shares.created_at', '>=', $startInterval)
+            ->where('shares.created_at', '<=', $endInterval)
+            ->groupBy('shares.users_id')
+            ->get();
+        $topUsersSharesOffers = $profile->posts()
+            ->select(\DB::raw('count(shares.id)*0.5 as score, shares.users_id'))
+            ->leftJoin('offers', 'offers.id', '=', 'news_feeds.post_id')
+            ->leftJoin('shares', 'shares.post_id', '=', 'offers.id')
+            ->whereIn('shares.users_id', $usersIds)
+            ->where('news_feeds.post_type', '=', 'App\\Offer')
+            ->where('shares.post_type', '=', 'App\\Offer')
+            ->where('shares.created_at', '>=', $startInterval)
+            ->where('shares.created_at', '<=', $endInterval)
+            ->groupBy('shares.users_id')
+            ->get();
+        $topUsersSharesEvents = $profile->posts()
+            ->select(\DB::raw('count(shares.id)*0.5 as score, shares.users_id'))
+            ->leftJoin('events', 'events.id', '=', 'news_feeds.post_id')
+            ->leftJoin('shares', 'shares.post_id', '=', 'events.id')
+            ->whereIn('shares.users_id', $usersIds)
+            ->where('news_feeds.post_type', '=', 'App\\TEvent')
+            ->where('shares.post_type', '=', 'App\\TEvent')
+            ->where('shares.created_at', '>=', $startInterval)
+            ->where('shares.created_at', '<=', $endInterval)
+            ->groupBy('shares.users_id')
+            ->get();
+
+        // views = *0.1
+        $topUsersViewsNews = $profile->posts()
+            ->select(\DB::raw('count(views.id)*0.1 as score, views.users_id'))
+            ->leftJoin('news', 'news.id', '=', 'news_feeds.post_id')
+            ->leftJoin('views', 'views.post_id', '=', 'news.id')
+            ->whereIn('views.users_id', $usersIds)
+            ->where('news_feeds.post_type', '=', 'App\\News')
+            ->where('views.post_type', '=', 'App\\News')
+            ->where('views.created_at', '>=', $startInterval)
+            ->where('views.created_at', '<=', $endInterval)
+            ->groupBy('views.users_id')
+            ->get();
+        $topUsersViewsOffers = $profile->posts()
+            ->select(\DB::raw('count(views.id)*0.5 as score, views.users_id'))
+            ->leftJoin('offers', 'offers.id', '=', 'news_feeds.post_id')
+            ->leftJoin('views', 'views.post_id', '=', 'offers.id')
+            ->whereIn('views.users_id', $usersIds)
+            ->where('news_feeds.post_type', '=', 'App\\Offer')
+            ->where('views.post_type', '=', 'App\\Offer')
+            ->where('views.created_at', '>=', $startInterval)
+            ->where('views.created_at', '<=', $endInterval)
+            ->groupBy('views.users_id')
+            ->get();
+        $topUsersViewsEvents = $profile->posts()
+            ->select(\DB::raw('count(shares.id)*0.5 as score, shares.users_id'))
+            ->leftJoin('events', 'events.id', '=', 'news_feeds.post_id')
+            ->leftJoin('shares', 'shares.post_id', '=', 'events.id')
+            ->whereIn('shares.users_id', $usersIds)
+            ->where('news_feeds.post_type', '=', 'App\\TEvent')
+            ->where('shares.post_type', '=', 'App\\TEvent')
+            ->where('shares.created_at', '>=', $startInterval)
+            ->where('shares.created_at', '<=', $endInterval)
+            ->groupBy('shares.users_id')
+            ->get();
+
+        $topUsersComputes = [
+            $topUsersPosts,
+            $topUsersCommentsNews,
+            $topUsersCommentsOffers,
+            $topUsersCommentsEvents,
+            $topUsersLikesNews,
+            $topUsersLikesOffers,
+            $topUsersLikesEvents,
+            $topUsersSharesNews,
+            $topUsersSharesOffers,
+            $topUsersSharesEvents,
+            $topUsersViewsNews,
+            $topUsersViewsOffers,
+            $topUsersViewsEvents,
+        ];
+
+        $topUsers = StatsHelper::computeTopusers($topUsersComputes);
+
+        // @TODO top posts
+
+        $data = [
+            'profileType' => $profileType,
+            $profileType => $profile,
+            'statPage' => true,
+            'period' => $period,
+            'startPeriod' => $startInterval,
+            'endPeriod' => $endInterval,
+            'startPreviousPeriod' => $startPreviousInterval,
+            'users' => $users,
+            'news' => $news,
+            'events' => $events,
+            'offers' => $offers,
+            'medias' => $medias,
+            'newUsers' => $newUsers,
+            'newNews' => $newNews,
+            'newEvents' => $newEvents,
+            'newOffers' => $newOffers,
+            'newMedias' => $newMedias,
+            'newPreviewUsers' => $instancePreviewNewUsers,
+            'newPreviewNews' => $newPreviewNews,
+            'newPreviewEvents' => $newPreviewEvents,
+            'newPreviewOffers' => $newPreviewOffers,
+            'newPreviewMedias' => $newPreviewMedias,
+            'views' => $views,
+            'newViews' => $newViews,
+            'newPreviewViews' => $newPreviewViews,
+            'comments' => $comments,
+            'newComments' => $newComments,
+            'newPreviewComments' => $newPreviewComments,
+            'likes' => $likes,
+            'newLikes' => $newLikes,
+            'newPreviewLikes' => $newPreviewLikes,
+            'topUsers' => $topUsers,
+            'instance' => Instance::find(session('instanceId')),
+        ];
+
+        return view('page.stats', $data);
     }
 }

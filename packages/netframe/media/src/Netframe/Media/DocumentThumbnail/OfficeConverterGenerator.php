@@ -22,8 +22,8 @@ class OfficeConverterGenerator implements Generator
         array_walk(
             $storages,
             function ($path) {
-                if (!is_dir($path)) {
-                    mkdir($path, 0777, true);
+                if (!file_exists($path)) {
+                    \File::makeDirectory($path, 0775, true);
                 }
                 return $path;
             }

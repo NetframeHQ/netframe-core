@@ -49,7 +49,7 @@
 
                                 @php
                                     $profile = explode('-', $result['_source']['profile_id']);
-                                    $rightsMedia = \App\Lib\Acl::getRights($profile[0], $profile[1], 5)
+                                    $rightsMedia = \App\Helpers\Lib\Acl::getRights($profile[0], $profile[1], 5)
                                 @endphp
 
                                 @include('media.partials.menu-actions', [

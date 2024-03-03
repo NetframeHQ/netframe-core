@@ -1,0 +1,44 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+
+metadata:
+  name: {{ .Chart.Name }}-netframe-task-instancescss
+  namespace: {{ .Release.Namespace | quote }}
+
+  labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 4 }}
+    app.kubernetes.io/component: "netframe-task-instancescss"
+    app.kubernetes.io/version: {{ required "Value appVersionNetframe is required" .Values.appVersionNetframe | quote }}
+
+spec:
+  schedule: "0 */1 * * *"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 1
+
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          namespace: {{ .Release.Namespace | quote }}
+          labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 12 }}
+            app.kubernetes.io/component: "netframe-task-instancescss"
+            app.kubernetes.io/version: {{ required "Value appVersionNetframe is required" .Values.appVersionNetframe | quote }}
+
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: {{ .Chart.Name }}-netframe-task-instancescss
+              image: {{ required "Value imagesRegistryUrl is required" .Values.imagesRegistryUrl }}/netframe:{{ required "Value appVersionNetframe is required" .Values.appVersionNetframe }}
+              args:
+                - /usr/local/bin/php
+                - artisan
+                - instances:css
+              env: {{ include (print .Template.BasePath "/netframe/_pods-env.yaml") . | nindent 16 }}
+              volumeMounts:
+                - name: {{ .Chart.Name }}-netframe-task-instancescss
+                  mountPath: /app/storage/uploads
+          volumes:
+            - name: {{ .Chart.Name }}-netframe-task-instancescss
+              persistentVolumeClaim:
+                claimName: {{ .Chart.Name }}-netframe
+          imagePullSecrets:
+            - name: {{ .Chart.Name }}-registry

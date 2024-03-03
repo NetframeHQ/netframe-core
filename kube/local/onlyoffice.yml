@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: netframe-onlyoffice
+  namespace: netframe-local
+  labels:
+    app: netframe
+    tier: onlyoffice
+    environment: local
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+  clusterIP: None
+  selector:
+    app: netframe
+    tier: onlyoffice
+    environment: local
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netframe-onlyoffice
+  namespace: netframe-local
+  labels:
+    app: netframe
+    tier: onlyoffice
+    environment: local
+spec:
+  selector:
+    matchLabels:
+      app: netframe
+      tier: onlyoffice
+      environment: local
+  replicas: 1
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      namespace: netframe-local
+      labels:
+        app: netframe
+        tier: onlyoffice
+        environment: local
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: netframe-onlyoffice
+          image: onlyoffice/documentserver:5.5
+          ports:
+            - containerPort: 80

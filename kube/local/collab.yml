@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: netframe-collab
+  namespace: netframe-local
+  labels:
+    app: netframe
+    tier: collab
+    environment: local
+spec:
+  ports:
+    - port: 3000
+      protocol: TCP
+  clusterIP: None
+  selector:
+    app: netframe
+    tier: collab
+    environment: local
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netframe-collab
+  namespace: netframe-local
+  labels:
+    app: netframe
+    tier: collab
+    environment: local
+spec:
+  selector:
+    matchLabels:
+      app: netframe
+      tier: collab
+      environment: local
+  replicas: 1
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      namespace: netframe-local
+      labels:
+        app: netframe
+        tier: collab
+        environment: local
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: netframe-collab
+          image: kz91436x.gra7.container-registry.ovh.net/netframe/collab:0.0.0
+          ports:
+            - containerPort: 80
+          env:
+            - name: APP_BASE_PROTOCOL
+              value: "http"
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: database
+                  key: host
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: database
+                  key: database
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: database
+                  key: user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: password

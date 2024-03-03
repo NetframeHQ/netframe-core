@@ -120,6 +120,8 @@
 
         {{ Form::open(['route'=> 'posting.default', 'id' => $form_id, 'class' => 'no-auto-submit form-posting-main', 'files' => true]) }}
         <div class="panel-body">
+            {{ Form::hidden('fromCalendar', (isset($fromCalendar)) ? $fromCalendar : '0') }}
+
             @if(isset($post->id) && $post->id != null)
                 {{ Form::hidden('id', (isset($post->id) ? $post->id : null)) }}
             @endif
@@ -284,6 +286,8 @@
 
             modalPosting.storeUrls();
             modalPosting.storeTarget();
+
+            {{ 'modalPosting.setup' . ucfirst($post->getType()) . '();' }}
 
             setTimeout(function(){
                 $("#{{$form_id}} textarea.autogrow").autoGrow({

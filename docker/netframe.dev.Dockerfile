@@ -25,7 +25,7 @@ RUN /usr/sbin/update-locale
 
 # install composer
 # to select composer-setup version, use commits on https://github.com/composer/getcomposer.org/commits/main
-ENV composer_version="526000b8958ea53546d29a8124217f60f26e3c1a"
+ENV composer_version="315c281a794f788242d2a740de10f78eb4587d69"
 ADD https://raw.githubusercontent.com/composer/getcomposer.org/${composer_version}/web/installer /tmp/composer-setup.php
 RUN php /tmp/composer-setup.php --version=2.0.9 --install-dir=/bin --filename=composer
 RUN rm /tmp/composer-setup.php

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: {{ .Chart.Name }}-onlyoffice
+  namespace: {{ .Release.Namespace | quote }}
+
+  labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 4 }}
+    app.kubernetes.io/component: "onlyoffice"
+    app.kubernetes.io/version: "5.5.3"
+
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name | quote }}
+      app.kubernetes.io/component: "onlyoffice"
+  replicas: 1
+  revisionHistoryLimit: 2
+
+  template:
+    metadata:
+      namespace: {{ .Release.Namespace | quote }}
+      labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 8 }}
+        app.kubernetes.io/component: "onlyoffice"
+        app.kubernetes.io/version: "5.5.3"
+
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: {{ .Chart.Name }}-onlyoffice
+          image: onlyoffice/documentserver:5.5.3
+          ports:
+            - containerPort: 80

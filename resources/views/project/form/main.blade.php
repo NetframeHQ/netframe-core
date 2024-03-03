@@ -42,7 +42,7 @@
         @endif
     </div>
     {{-- CUSTOM LINKS PAGE SETTINGS PROJECTS --}}
-    @if($project->id != null 0)
+    @if($project->id != null)
         <ul class="nf-actions">
             {{-- ••• MENU --}}
             <li class="nf-action nf-custom-nav">
@@ -121,12 +121,16 @@
                                     href="{{ url()->route('project_edit_community', ['id' => $project->id, 'status' => $status]) }}">{{ trans('members.community.'.$statusName) }}</a>
                             </li>
                         @endforeach
-
+                        <li class="sep"></li>
+                        <li>
+                            <a class="nf-settings-link {{(isset($statPage)) ? 'active' : '' }}"
+                                href="{{ url()->route('profile.stats', ['profileType' => 'project', 'profileId' => $project->id]) }}">{{ trans('stats.title') }}</a>
+                        </li>
                         <li class="sep"></li>
                         <li>
                             @if($project->id != null)
-                                <a class="fn-confirm-delete-get nf-settings-link {{(url()->current() == url()->Route('profile.disable', ['profiteType' => 'project', 'profileId' => $project->id, 'active' => ($project->active == 0) ? 1 : 0 ])) ? 'active' : '' }}"
-                                    href="{{ url()->Route('profile.disable', ['profiteType' => 'project', 'profileId' => $project->id, 'active' => ($project->active == 0) ? 1 : 0 ]) }}"
+                                <a class="fn-confirm-delete-get nf-settings-link {{(url()->current() == url()->Route('profile.disable', ['profileType' => 'project', 'profileId' => $project->id, 'active' => ($project->active == 0) ? 1 : 0 ])) ? 'active' : '' }}"
+                                    href="{{ url()->Route('profile.disable', ['profileType' => 'project', 'profileId' => $project->id, 'active' => ($project->active == 0) ? 1 : 0 ]) }}"
                                     data-txtconfirm="{{ ($project->active == 0) ? trans('project.activation.confirmEnable') : trans('project.activation.confirmDisable') }}"
                                     >
                                     {{ ($project->active == 0) ? trans('project.activation.enable') : trans('project.activation.disable') }}

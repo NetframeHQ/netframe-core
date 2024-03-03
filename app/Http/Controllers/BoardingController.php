@@ -65,10 +65,6 @@ class BoardingController extends PublicController
                 // proccess to mail send with code
                 $boardingKey = Boarding::generateFirstKey();
 
-                if (config('netframe.log_mails_data')) {
-                    Log::debug('Sending ' . request()->get('email') . ' inscription code ' . $boardingKey);
-                }
-
                 if (!session()->has('userLang') || empty(session('userLang'))) {
                     session(['userLang' => 'en']);
                 }
@@ -80,7 +76,15 @@ class BoardingController extends PublicController
                 $boarding->lang = session('userLang');
                 $boarding->save();
 
-                Mail::to($boarding->email)->send(new BoardingDemand($boarding));
+                if (env('BOARDING_SESSION_CODE') == '1') {
+                    session(['boarding_code' => $boardingKey]);
+                }
+
+                if (config('netframe.log_mails_data')) {
+                    Log::debug('Sending ' . request()->get('email') . ' inscription code ' . $boardingKey);
+                } else {
+                    Mail::to($boarding->email)->send(new BoardingDemand($boarding));
+                }
 
                 session(['boarding.boarding' => $boarding->id]);
 

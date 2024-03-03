@@ -18,7 +18,7 @@ return array (
           'content' => 'Contenido de la carta de consentimiento local',
       ],
   ),
-  'menu' => array(
+  'menu' => [
     'apps' => 'Aplicaciones',
     'autoSubscribe' => 'Suscripciones de usuarios',
     'boarding' => 'Proceso de embarque',
@@ -35,5 +35,6 @@ return array (
     'create' => 'Crear usuarios',
     'groups' => 'Grupos de usuarios',
     'usersdata' => 'Datas más usuarios',
-  ),
+    'stats' => 'Estadísticas',
+  ],
 );

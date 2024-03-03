@@ -1,4 +1,4 @@
-<link rel="icon" href="@yield('favicon', asset('assets/img/favicon.png')) ">
+<link rel="icon" href="@yield('favicon', asset('assets/img/favicon.svg')) ">
 
 {{ HTML::style('assets/vendor/select2/css/select2.min.css') }}
 
@@ -24,7 +24,8 @@
 
 @if(auth()->guard('web')->check())
     <script src="//{{ Request::getHttpHost() }}/ws/socket.io/socket.io.js"></script>
-    <meta name="broadcast-domain" content="{{ config('app.protocol') }}://broadcast1.{{ env('APP_BASE_DOMAIN', 'netframe.co') }}" />
+    <meta name="broadcast-domain" content="{{ config('app.protocol') }}://{{config('app.broadcastUrl')}}.{{ env('APP_BASE_DOMAIN', 'netframe.co') }}" />
+    <meta name="collab-ws-url" content="{{ env('COLLAB_URL', '') }}" />
     <meta name="collab-ws-port" content="{{ env('COLLAB_PORT', '') }}" />
     <meta name="collab-ws-path" content="{{ env('COLLAB_PATH', '') }}" />
     <meta name="user-lang" content="{{ \App::getLocale() }}" />

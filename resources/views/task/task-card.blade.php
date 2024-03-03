@@ -205,7 +205,7 @@
 
 
       <td>
-        <div class="nf-task-cell {{$editable}} field" data-custom="yes" data-id="{{$task->id}}" data-type="{{$col['type']}}" data-field="{{$key}}" data-value="{{$val}}">
+        <div class="nf-task-cell {{$editable}} field" data-custom="yes" data-id="{{$task->id}}" data-type="{{$col['type']}}" data-field="{{$key}}" data-value="{!!$val!!}">
           <span class="field-c {{$col['type']}}">
             @if($col['type'] == 'date' && $task->getCol($key) != "")
               @php
@@ -258,7 +258,7 @@
               @endif
 
             @else
-              {{$val}}
+              {!!$val!!}
             @endif
           </span>
         </div>

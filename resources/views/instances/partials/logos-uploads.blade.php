@@ -68,7 +68,7 @@
                             ])
                         </label>
                     </li>
-                    <li class="fn-remove-avatar @if($mainLogo == $defaultMainLogo) d-none @endif">
+                    <li class="fn-remove-avatar @if($mainLogo == $defaultMainLogo || ($typeTheme == 'dark' && $mainLogo == $mainLogoLight)) d-none @endif">
                         <a class="nf-btn" id="fn-delete-instance-img" data-image-type="{{ ($typeTheme == 'dark') ? 'instance-main-logo-dark' : 'instance-main-logo' }}">
                             <span class="svgicon btn-img">
                                 @include('macros.svg-icons.trash')

@@ -36,6 +36,7 @@ class PublicController extends Controller
                             $channel->id .
                             '-' .
                             $visioConf['keyMeet'];
+                        return redirect()->to('https://visio.netframe.online/group/netframe/' . $roomFullName);
                         return redirect()->to('https://meet.jit.si/' . $roomFullName);
 
                         $visioConf = config('external-api.jitsi');
@@ -91,7 +92,7 @@ class PublicController extends Controller
                     if ($instanceLogo != null && $instanceLogo->parameter_value != null) {
                         $logoParams = json_decode($instanceLogo->parameter_value, true);
                         $mainLogoUrl = url()->route('instance.download', [
-                            'imageType' => 'main_logo_2018',
+                            'parametername' => 'main_logo_2018',
                             'filename' => $logoParams['filename']
                         ]);
                         view()->share('instanceLogo', $mainLogoUrl);

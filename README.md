@@ -1,14 +1,11 @@
-# netframe-core
-Netframe v3.0 core will be available under open source licence (see licence) on the 30th of january.  The CSS used on the version accessible as Saas on netframe.co remains proprietary [(see netframe-css)](https://github.com/NetframeHQ/netframe-css).
-
-If you want to receive an email to be alerted https://netframe.co/contact or star/follow the project on github.
-
 Netframe
 ========
 
-[![Lint and test unit](https://github.com/NetframeHQ/netframe-core/actions/workflows/lint-and-test-unit.yml/badge.svg)](https://github.com/NetframeHQ/netframe-core/actions/workflows/lint-and-test-unit.yml)
-[![Test end-to-end](https://github.com/NetframeHQ/netframe-core/actions/workflows/test-integration.yml/badge.svg)](https://github.com/NetframeHQ/netframe-core/actions/workflows/test-integration.yml)
+This repository contains the Netframe project.
 
+[![Lint and test unit](https://github.com/NetframeHQ/netframe5/actions/workflows/lint-and-test-unit.yml/badge.svg)](https://github.com/NetframeHQ/netframe5/actions/workflows/lint-and-test-unit.yml)
+[![Test end-to-end](https://github.com/NetframeHQ/netframe5/actions/workflows/test-integration.yml/badge.svg)](https://github.com/NetframeHQ/netframe5/actions/workflows/test-integration.yml)
+[![Deploy](https://github.com/NetframeHQ/netframe5/actions/workflows/build-images.yml/badge.svg)](https://github.com/NetframeHQ/netframe5/actions/workflows/build-images.yml)
 
 How to run locally
 ------------------
@@ -22,5 +19,5 @@ Project's architecture
 
 If you want to now more about the project's architecture, you can read:
 
-the [architecture document](./docs/architecture.md)
-
+1. the [architecture document](./docs/architecture.md)
+2. optionally, the [infrastructure document](./docs/infrastructure/index.md)

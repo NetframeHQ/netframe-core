@@ -66,7 +66,6 @@
         });
 
         that.$wrapper.on('click', '.fn-remove-link', function (e) {
-            console.log('delete');
             e.preventDefault();
             var delLink = $(this).closest('div.link-preview');
             var linkId = delLink.data('id');
@@ -252,37 +251,39 @@
             data: data,
             type: "POST",
             success: function (data) {
+                let fromCalendar;
                 // add listener on data.success to create autoLoad Modal with
                 // success message
+                if (typeof data.fromCalendar != 'undefined' && data.fromCalendar) {
+                    fromCalendar = true;
+                } else {
+                    fromCalendar = false;
+                }
+                
                 if (typeof data.returnCode != 'undefined') {
                     if (data.returnCode == 'success') {
-
                         // close modal if open
-                        if (data.viewContent && data.modal) {
-                            // update post in newsfeed
+                        if (data.viewContent && data.modal && !fromCalendar) {
+                            // update content in newsfeed
                             var elTarget = $(data.targetId);
                             if (that.$originalTarget == data.targetId) {
-                                //elTarget.fadeOut('slow', function() {
                                 elTarget.replaceWith(data.viewContent);
-                                //    elTarget.fadeIn('slow');
-                                //});
-                            }
-                            else {
+                            } else {
                                 $(that.$originalTarget).fadeOut('slow', function () {
                                     $(this).remove();
                                 });;
                             }
-                        }
-                        else if (data.viewContent && !data.modal) {
+                        } else if (data.viewContent && !data.modal) {
+                            // insert content in newsfeed
                             if ($(data.targetId + " article.topic").length > 0) {
                                 $(data.viewContent).insertBefore(data.targetId + " article.topic:first").hide().fadeIn('slow');
-                            }
-                            else {
+                            } else {
                                 $(data.targetId).append(data.viewContent).hide().fadeIn('slow');
                             }
                         }
 
-                        if (data.viewContent) {
+                        if (data.viewContent && !fromCalendar) {
+                            // reload view media modal trigger
                             var $modal = $('#viewMediaModal');
                             new PlayMediaModal({
                                 $modal: $modal,
@@ -291,14 +292,16 @@
                                 $media: $('.viewMedia'),
                                 baseUrl: baseUrl
                             });
+                            if (typeof data.targetMapId != 'undefined') {
+                                loadMapEvents(data.targetMapId);
+                            }
                         }
 
                         if (data.view) {
                             // replace form with return form error or empty
                             if (data.modal) {
-                                postObject.$wrapper.find('.modal-content').html(data.view);
-                            }
-                            else {
+                                postObject.$wrapper.find('.modal-body').html(data.view);
+                            } else {
                                 postObject.$wrapper.html(data.view);
                             }
 
@@ -309,8 +312,6 @@
 
                             postObject.$wrapper.find("textarea.mentions").mentionsInput({ source: laroute.route('search')+'?types[0]=users&types[1]=houses&types[2]=community&types[3]=projects&types[4]=channels&types[5]=medias',wrapper: that.$wrapper });
                         }
-
-                        loadMapEvents("#newsFeed");
 
                         if (typeof data.returnMessage != 'undefined' && typeof data.autoFireModal != 'undefined') {
                             if (!postObject.$modal) {
@@ -324,13 +325,16 @@
                                 $("#modal-ajax").modal("hide");
                             }, 2000);
                         }
-                    }
-                    else if (data.returnCode == 'error') {
+                        
+                        if (fromCalendar && typeof data.event != undefined) {
+                            $('#calendar').fullCalendar('renderEvent', data.event, true);
+                        }
+                        
+                    } else if (data.returnCode == 'error') {
                         // replace form with error containing form
                         if (data.modal) {
                             postObject.$wrapper.find('.modal-content').html(data.view);
-                        }
-                        else {
+                        } else {
                             postObject.$wrapper.html(data.view);
                         }
 
@@ -379,10 +383,8 @@
     PostingSystem.prototype.setupEvent = function () {
         var postObject = this;
         postObject.$wrapper.updatePolyfill();
-        // initializeMiniMapForm();
 
         postObject.$wrapper.on('change', 'input#panel-event-allday', function (e) {
-            //alert('all day');
             if ($(this).is(":checked")) {
                 postObject.$wrapper.find('.time-selector').each(function (e) {
                     $(this).hide();
@@ -393,6 +395,18 @@
                     $(this).show();
                 });
             }
+        });
+        
+        // check if time is input to disable all day selector
+        postObject.$wrapper.on('change', '.panel-post-time-input', function (e) {
+            let timeEmpty = true;
+            postObject.$wrapper.find('.panel-post-time-input').each(function (e) {
+                if ($(this).val() != '') {
+                    timeEmpty = false;
+                }
+            });
+            postObject.$wrapper.find('input#panel-event-allday').prop("checked", timeEmpty);
+            
         });
 
         /*
@@ -572,6 +586,7 @@
     PostingSystem.prototype.storeTarget = function () {
         var postObject = this;
         var postType = postObject.$wrapper.find("input[name='post_type']").val().capitalize();
+        if (postType == 'Event') postType = 'TEvent';
         var postId = postObject.$wrapper.find("input[name='id']").val();
         var profileType = postObject.$wrapper.find("input[name='type_foreign']").val().capitalize();
 

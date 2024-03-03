@@ -11,7 +11,7 @@
 
 @section('content')
 
-@include('page.user-header') 
+@include('page.user-header')
 
 <div class="main-container">
     <div id="nav_skipped" class="main-scroller">
@@ -19,7 +19,7 @@
 
             @if($profile->coverImage != null)
                 <div class="nf-form-cell nf-cell-cover" style="{{ (($profile->coverImage != null) ? 'background-image:url(\''.$profile->coverImage->getUrl().'\')' : '')}}">
-                    
+
                 </div>
             @endif
 
@@ -35,7 +35,7 @@
             @endif
 
             @foreach($newsfeed as $post)
-                @include('page.post-content')
+                @include('page.post-content-loader')
             @endforeach
         </section>
 
@@ -55,6 +55,9 @@
 @parent
 <script>
 (function($){
+    // load posts
+    loadTimelinePosts();
+
     //include function for infinitescroll
     var profileIdFeed = '{{ $dataUser->id }}';
     var profileTypeFeed = 'user';
@@ -68,7 +71,8 @@
                 .success(function (data) {
                     $("#newsFeed").append(data.view);
                     scrolling = 0;
-                    
+                    loadTimelinePosts();
+
                     new PlayMediaModal({
                         $modal: $modal,
                         $modalTitle: $modal.find('.modal-title'),
@@ -119,8 +123,7 @@
         baseUrl: baseUrl
     });
 
-     // load events maps
-    loadMapEvents("#newsFeed");
+    // load events maps
 })(jQuery);
 </script>
 @stop

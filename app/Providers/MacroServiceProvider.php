@@ -17,7 +17,6 @@ class MacroServiceProvider extends ServiceProvider
 
         //parent::boot();
         // Load macros
-        require base_path() . '/app/Macros/Templates.php';
         require base_path() . '/app/Macros/Buttons.php';
         require base_path() . '/app/Macros/Images.php';
         require base_path() . '/app/Macros/Notifiers.php';
@@ -26,6 +25,7 @@ class MacroServiceProvider extends ServiceProvider
         require base_path() . '/app/Macros/Icons.php';
         require base_path() . '/app/Macros/Workflow.php';
         require base_path() . '/app/Macros/Rights.php';
+        require base_path() . '/app/Macros/Stats.php';
     }
 
     /**

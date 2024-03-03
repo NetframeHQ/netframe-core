@@ -513,6 +513,7 @@ class ChannelController extends BaseController
                 $channel->id .
                 '-' .
                 $visioConf['keyMeet'];
+            return redirect()->to('https://visio.netframe.online/group/netframe/' . $roomFullName);
             return redirect()->to('https://meet.jit.si/' . $roomFullName);
 
             // standard redirect

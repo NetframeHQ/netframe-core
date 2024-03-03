@@ -75,9 +75,10 @@ services:
             - database
         entrypoint: "node"
         volumes:
-            - "./node/:/app:cached"
+            - "./:/app"
+            - "./node/:/app/node:cached"
         expose:
-            - "3000"
+            - ${COLLAB_PORT_BACK:-4000}
         environment:
             DB_HOST: database
             DB_DATABASE: netframe5
@@ -86,8 +87,6 @@ services:
         ulimits:
             nofile: 65535
         user: node
-        volumes:
-            - "./:/app"
         working_dir: "/app/node"
         restart: on-failure
     onlyoffice:
@@ -164,7 +163,7 @@ services:
         ports:
             - "8080:80"
     kibana:
-        image: docker.elastic.co/kibana/kibana-oss:6.0.1
+        image: docker.elastic.co/kibana/kibana-oss:7.8.1
         depends_on:
             - "search"
         environment:

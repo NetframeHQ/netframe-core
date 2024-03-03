@@ -20,6 +20,7 @@ return array(
         'usersdata' => 'Données utilisateurs',
         'create' => 'Créer des utilisateurs',
         'groups' => 'Groupes d\'utilisateurs',
+        'stats' => 'Statistiques',
     ),
 
     'apps' => array(
@@ -55,9 +56,9 @@ return array(
             'newKeyGenerated' => 'la nouvelle clé a bien été générée'
         ),
         'consentCharter' => [
-            'title' => 'Charte de consentement locale',
-            'state' => 'Activer la charte de consentement locale',
-            'content' => 'Contenu de la charte de consentement',
+            'title' => 'Ajouter votre charte interne',
+            'state' => 'Activer la charte interne',
+            'content' => 'Contenu de la charte',
         ],
     ),
     'rights' => array(

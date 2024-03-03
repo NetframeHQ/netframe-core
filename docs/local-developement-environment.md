@@ -9,7 +9,8 @@ For your first run, install listed dependencies and use the setup documented in 
 Virtual machine
 ---------------
 
-You can run the local development inside a Debian virtual machine.
+You can run the local development inside a Debian 10 virtual machine.
+You can ask for the virtual machine appliance to the CTO or another developer.
 If you want to build the vitual machine, follow the [virtual machine build guide](./virtual-machines-build.md).
 
 If you decide to use this virtual machine, you don't need to read the "dependencies" section.

@@ -19,14 +19,19 @@ Netframe currently includes the following components:
 * a Redis key-value store
 * an ElasticSearch search engine
 
+On production systems, we use a gateway based on HAProxy: [Voyager](https://voyagermesh.com/).
+
 In the local development environment, we have an Nginx proxy.
+
+In the future, the architecture will evolve to a micro-services collection instead of a monolithic application.
 
 
 ### Netframe application
 
-This component is the main application, mainly based on [Laravel 9](https://laravel.com/docs/9.x/) and some [VueJS 2.6](https://vuejs.org/v2/guide/).
+This component is the main application, mainly based on [Laravel 5.5](https://laravel.com/docs/5.5/) and some [VueJS 2.6](https://vuejs.org/v2/guide/).
+An update to Laravel 5.8 is planned.
 
-We use Composer 2 for PHP dependencies management and npm 5.6.0 for front-end dependencies management (upgrade to newer version in progress).
+We use Composer 1 for PHP dependencies management (we tried version 2, the installation fail on some conditions) and npm 5.6.0 for front-end dependencies management (newer versions  of npm seem to break little things too).
 
 > This is the component which will be decoupled in multiple services and a single page application with VueJS.
 
@@ -49,5 +54,7 @@ This server manages the collaborative notes edition.
 
 More reading
 ------------
+
+The [infrastructure document](./infrastructure/index.md) is a good reading.
 
 If you want to work on the project locally, the [local development environment document](./local-developement-environment.md) is mandatory.

@@ -137,4 +137,14 @@ Route::group(['prefix' => 'instance', 'namespace' => 'Instance', 'middleware' =>
         'as' => 'instances.remove.media',
         'uses' => 'GraphicalController@removeMedia'
     ]);
+
+    /*
+     *
+     * Routes form instance stats
+     *
+     */
+    Route::get('stats/{period?}', [
+        'as' => 'instance.stats',
+        'uses' => 'StatsController@home',
+    ]);
 });

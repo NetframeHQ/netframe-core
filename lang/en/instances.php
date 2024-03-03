@@ -31,9 +31,9 @@ return array(
         'validateUserSwitchOff' => 'Switch for automatic approval',
         'validateUserSwitchOn' => 'Switch for manual approval',
         'consentCharter' => [
-            'title' => 'Locale consent charter',
-            'state' => 'Activate locale consent charter',
-            'content' => 'Locale consent charter content',
+            'title' => 'Add internal consent charter',
+            'state' => 'Activate internal consent charter',
+            'content' => 'Internal consent charter content',
         ],
     ),
     'graphical' => array(
@@ -126,6 +126,7 @@ return array(
         'create' => 'Create users',
         'groups' => 'Users groups',
         'usersdata' => 'Users datas',
+        'stats' => 'Statistics',
     ),
     'parameters' => 'Workspace settings',
     'profiles' => array(

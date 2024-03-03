@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: {{ .Chart.Name }}-netframe
+  namespace: {{ .Release.Namespace | quote }}
+
+  labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 4 }}
+    app.kubernetes.io/component: "netframe"
+    app.kubernetes.io/version: {{ required "Value appVersionNetframe is required" .Values.appVersionNetframe | quote }}
+
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name | quote }}
+      app.kubernetes.io/component: "netframe"
+  replicas: {{ .Values.appReplicasNetframe | default 1 }}
+  revisionHistoryLimit: 2
+
+  template:
+    metadata:
+      namespace: {{ .Release.Namespace | quote }}
+      labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 8 }}
+        app.kubernetes.io/component: "netframe"
+        app.kubernetes.io/version: {{ required "Value appVersionNetframe is required" .Values.appVersionNetframe | quote }}
+
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 33 # this is www-data GID in the Docker PHP image
+        fsGroupChangePolicy: OnRootMismatch
+      initContainers:
+        - name: {{ .Chart.Name }}-netframe-init-uploads
+          image: busybox:1.33.0
+          command:
+            - "/bin/sh"
+            - "-c"
+            - "mkdir -m 774 -p /var/www/html/storage/uploads/documents/pdf /var/www/html/storage/uploads/documents/preview"
+          volumeMounts:
+            - name: {{ .Chart.Name }}-netframe
+              mountPath: /var/www/html/storage/uploads
+      containers:
+        - name: {{ .Chart.Name }}-netframe-app
+          image: {{ required "Value imagesRegistryUrl is required" .Values.imagesRegistryUrl }}/netframe:{{ required "Value appVersionNetframe is required" .Values.appVersionNetframe }}
+          workingDir: /var/www/html
+          env: {{ include (print .Template.BasePath "/netframe/_pods-env.yaml") . | nindent 12 }}
+          volumeMounts:
+            # Netframe application
+            - name: {{ .Chart.Name }}-netframe-app
+              mountPath: /var/www/html
+            # Uploads for x-send-file
+            - name: {{ .Chart.Name }}-netframe
+              mountPath: /var/www/html/storage/uploads
+          startupProbe:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - "stat -c %U /var/www/html/public/index.php | grep -q www-data"
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "/bin/sh"
+                  - "-c"
+                  - "cp -r /app/* /var/www/html/ && chown -R www-data:www-data /var/www/html/storage/ /var/www/html/public/"
+          resources:
+            limits:
+              cpu: "2000m"
+              memory: "2Gi"
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+        - name: {{ .Chart.Name }}-netframe-http
+          image: "nginx:1.18.0"
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            # Nginx configuration
+            - name: {{ .Chart.Name }}-netframe-http
+              mountPath: /etc/nginx/conf.d
+            # Netframe application
+            - name: {{ .Chart.Name }}-netframe-app
+              mountPath: /var/www/html
+            # Uploads for x-send-file
+            - name: {{ .Chart.Name }}-netframe
+              mountPath: /var/www/html/storage/uploads
+      volumes:
+        # Laravel storage
+        - name: {{ .Chart.Name }}-netframe
+          persistentVolumeClaim:
+            claimName: {{ .Chart.Name }}-netframe
+        # Netframe application
+        - name: {{ .Chart.Name }}-netframe-app
+          emptyDir: {}
+        # Nginx configuration
+        - name: {{ .Chart.Name }}-netframe-http
+          configMap:
+            name: {{ .Chart.Name }}-netframe-http
+      imagePullSecrets:
+        - name: {{ .Chart.Name }}-registry

@@ -4,7 +4,7 @@
         <span></span>
         <span></span>
     </button>
-    <a href="{{ url()->route('user.timeline') }}" title="{{ trans('netframe.leftMenu.home') }}" class="navigation-logo">
+    <a href="{{ url()->route('portal') }}" title="{{ trans('netframe.leftMenu.home') }}" class="navigation-logo">
         @if(isset($menuLogo))
             <div style="background-image: url('{{ $menuLogo }}')" class="logo-img nf-logosquare menu-logo-light {{ (isset($disableCssMode)) ? $disableCssMode : '' }}" alt="Logo"></div>
         @else

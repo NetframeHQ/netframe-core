@@ -23,7 +23,7 @@
           @endif
 
           @foreach($tasks as $task)
-            <li class="item">
+            <li class="item" id="task-{{ $task['task']->id }}">
               <a href="{{ route('task.project',array('project' => $task['task']->id)) }}" class="nf-invisiblink"></a>
               <div class="item-icon">
                 <span class="svgicon">
@@ -165,7 +165,7 @@ $(document).ready(function(){
         else{
             e.preventDefault();
             var el = $(this);
-            var panel = el.closest("li.task");
+            var panel = el.closest("li.item");
 
             var dataId = {type: el.data('type'), id: el.data('id') };
 
@@ -174,7 +174,7 @@ $(document).ready(function(){
             });
 
             jqXhr.success(function(data) {
-                if(dataId){
+                if(data.delete){
                     panel.fadeOut();
                 }
             });

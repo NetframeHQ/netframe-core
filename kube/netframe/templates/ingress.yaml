@@ -1,0 +1,77 @@
+apiVersion: voyager.appscode.com/v1beta1
+kind: Ingress
+
+metadata:
+  name: {{ .Chart.Name }}
+  namespace: {{ .Release.Namespace | quote }}
+
+  annotations:
+    ingress.appscode.com/type: LoadBalancer
+    service.beta.kubernetes.io/ovh-loadbalancer-proxy-protocol: "v2"
+
+  labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 4 }}
+    app.kubernetes.io/component: "ingress"
+
+spec:
+{{ if eq .Values.appProtocol "https" }}
+  tls:
+    - hosts:
+      - "*"
+      ref:
+        kind: Secret
+        name: "tls-netframe"
+{{ end }}
+  rules:
+    - host: broadcast1.{{ required "Value appHost is required" .Values.appHost }}
+      http:
+        alpn:
+          {{- if eq .Values.appProtocol "https" }}
+          - h2
+          {{- end }}
+          - http/1.1
+          - http/1.0
+        paths:
+          - path: "/socket.io"
+            backend:
+              serviceName: {{ .Chart.Name }}-broadcast
+              servicePort: "6001"
+          - path: /ws
+            backend:
+              serviceName: netframe-broadcast
+              servicePort: "6001"
+              rewriteRules:
+                - ^([^\ :]*)\ /ws/(.*)$ \1\ /\2
+    - host: "*"
+      http:
+        alpn:
+          {{- if eq .Values.appProtocol "https" }}
+          - h2
+          {{- end }}
+          - http/1.1
+          - http/1.0
+        paths:
+          - path: "/collab/broadcast"
+            backend:
+              serviceName: {{ .Chart.Name }}-collab
+              servicePort: "3000"
+              rewriteRules:
+                - ^([^\ :]*)\ /collab/broadcast/(.*)$ \1\ /\2
+          - path: "/ws"
+            backend:
+              serviceName: {{ .Chart.Name }}-broadcast
+              servicePort: "6001"
+              rewriteRules:
+                - "^([^\\ :]*)\\ /ws/(.*)$ \\1\\ /\\2"
+          - path: "/onlyoffice"
+            backend:
+              serviceName: {{ .Chart.Name }}-onlyoffice
+              servicePort: "80"
+              headerRules:
+                - X-Forwarded-Host %[req.hdr(Host)]/onlyofficeds
+                - X-Forwarded-Proto {{ required "Value appProtocol is required" .Values.appProtocol }}
+                - Connection upgrade
+              rewriteRules:
+                - "^([^\\ :]*)\\ /onlyofficeds/(.*)$ \\1\\ /\\2"
+          - backend:
+              serviceName: {{ .Chart.Name }}-netframe
+              servicePort: "80"

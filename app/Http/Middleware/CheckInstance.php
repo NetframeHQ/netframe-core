@@ -26,12 +26,15 @@ class CheckInstance
         }
         */
 
+        $defaultSubDomain = env('DEFAULT_SUBDOMAIN', 'work');
+
         $baseProtocol = env('APP_BASE_PROTOCOL');
         $baseDomain = env('APP_BASE_DOMAIN');
         $requestedDomain = $request->getHttpHost();
         $instanceSlug = str_replace('.'.$baseDomain, '', $requestedDomain);
 
-        if ($requestedDomain != $baseDomain && !in_array($instanceSlug, ["work", "broadcast", "drive-connect"])) {
+        if ($requestedDomain != $baseDomain &&
+            !in_array($instanceSlug, [$defaultSubDomain, "broadcast", "drive-connect"])) {
             //check instance
 
             session(['withoutInstance' => false]);
@@ -205,7 +208,14 @@ class CheckInstance
                         \App\Helpers\SessionHelper::destroyProfile();
                         auth()->guard('web')->logout();
                         session()->flush();
-                        return redirect()->to(env('APP_URL').'/static/instance-closed');
+                        $redirectUrl = $baseProtocol .
+                            '://' .
+                            $defaultSubDomain .
+                            '.' .
+                            $baseDomain .
+                            '/static/instance-closed';
+                        return redirect()->to($redirectUrl);
+                        //return redirect()->to(env('APP_URL').'/static/instance-closed');
                     } elseif (isset($user) && $subscribeValid != 1) {
                         $uhi = \DB::table('users_has_instances')
                             ->where([
@@ -234,7 +244,7 @@ class CheckInstance
             } else {
                 //not found instance
                 //session()->forget(['instanceId', 'instance']);
-                return redirect()->to($baseProtocol.'://work.'.$baseDomain);
+                return redirect()->to($baseProtocol.'://' . $defaultSubDomain . '.' . $baseDomain);
             }
         } elseif (auth()->guard('web')->check() && !in_array($instanceSlug, ["broadcast", "drive-connect"])) {
             $user = auth()->guard('web')->user();
@@ -250,7 +260,7 @@ class CheckInstance
             return redirect()->to($instance->getUrl());
         } elseif ($instanceSlug == 'drive-connect') {
             if (!auth()->guard('web')->check()) {
-                return redirect()->to($baseProtocol.'://work.'.$baseDomain);
+                return redirect()->to($baseProtocol.'://' . $defaultSubDomain . '.'.$baseDomain);
             }
         } elseif (!in_array($instanceSlug, ["broadcast"])) {
             auth()->guard('web')->logout();

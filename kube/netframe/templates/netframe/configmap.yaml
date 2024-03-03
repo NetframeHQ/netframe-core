@@ -1,0 +1,27 @@
+{{- $configmapName := print .Chart.Name "-netframe" -}}
+{{- $existingConfigmap := lookup "v1" "ConfigMap" .Release.Namespace $configmapName -}}
+{{- $existingConfigmap := $existingConfigmap.data | default dict -}}
+
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: {{ $configmapName | quote }}
+  namespace: {{ .Release.Namespace | quote }}
+
+  labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 4 }}
+    app.kubernetes.io/component: "netframe"
+    app.kubernetes.io/version: {{ required "Value appVersionNetframe is required" .Values.appVersionNetframe | quote }}
+
+data:
+  env: {{ required "Value environment is required" .Values.environment | quote }}
+  base-protocol: {{ required "Value appProtocol is required" .Values.appProtocol | quote }}
+  base-domain: {{ required "Value appHost is required" .Values.appHost | quote }}
+  url: {{ required "Value appProtocol is required" .Values.appProtocol }}://{{ required "Value appHost is required" .Values.appHost }}
+  session-domain: .{{ required "Value appHost is required" .Values.appHost }}
+  session-driver: "redis"
+  mail-driver: "smtp"
+  mail-sender-address: {{ print "no-reply@" (required "Value appHost is required" .Values.appHost) }}
+  mail-sender-name: "Netframe"
+  search-prefix: {{ index $existingConfigmap "search-prefix" | default "" | quote }}
+  proxy-file-header: "X-Accel-Redirect"

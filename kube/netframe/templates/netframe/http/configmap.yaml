@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: {{ .Chart.Name }}-netframe-http
+  namespace: {{ .Release.Namespace | quote }}
+
+  labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 4 }}
+    app.kubernetes.io/component: "netframe-http"
+    app.kubernetes.io/version: {{ .Chart.Version | replace "+" "_" | quote }}
+
+data:
+  netframe.nginx.conf: |
+    server {
+      listen 80 default_server;
+      listen [::]:80 default_server;
+
+      root /var/www/html/public;
+      index index.html index.htm index.php;
+      charset utf-8;
+      client_max_body_size 1040M; # this value is configure in the PHP-FPM image too
+      error_page 404 /index.php;
+
+      location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_read_timeout 3600; # this value is configure in the PHP-FPM image too
+      }
+
+      location /var/www/html/storage/ {
+        internal;
+        root /;
+      }
+
+      location / {
+        try_files $uri $uri/ /index.php?$query_string;
+        gzip_static on;
+      }
+    }

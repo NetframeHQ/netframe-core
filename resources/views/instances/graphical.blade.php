@@ -107,6 +107,7 @@
                         'typeTheme' => 'light',
                         'menuLogo' => $menuLogo,
                         'mainLogo' => $mainLogo,
+                        'defaultMainLogo' => $defaultMainLogo,
                     ])
                     @include('instances.partials.color-theme', [
                         'typeTheme' => 'light',
@@ -120,6 +121,8 @@
                         'typeTheme' => 'dark',
                         'menuLogo' => $menuLogoDark,
                         'mainLogo' => $mainLogoDark,
+                        'mainLogoLight' => $mainLogo,
+                        'defaultMainLogo' => $defaultMainLogoDark,
                     ])
                     @include('instances.partials.color-theme', [
                         'typeTheme' => 'dark',

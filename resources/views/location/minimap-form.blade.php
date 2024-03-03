@@ -6,7 +6,7 @@
 
 <!--MAP -->
 <label class="nf-form-cell nf-cell-full @if($errors->has('placeSearch')) nf-cell-error @endif @if(!$gdpr_agrement) d-none @endif">
-    {{ Form::hidden('latitude', $valueLatitude, ['class'=>'input-latitude','autocomplete' => 'off']) }}
+    {{ Form::hidden('latitude', $valueLatitude, ['class'=>'input-latitude']) }}
     {{ Form::hidden('longitude', $valueLongitude, ['class'=>'input-longitude']) }}
     {{ Form::input('text',
         'placeSearch',
@@ -15,7 +15,7 @@
             'id' => 'pac-input-form',
             'class' => 'nf-form-input',
             'placeholder' => trans('map.searchPlaceHolder')
-        ]) 
+        ])
     }}
     <span class="nf-form-label">
         {{ trans('form.searchPlace.'.class_basename($profile)) }}

@@ -195,7 +195,7 @@
         <div class="submenu-container submenu-right">
           <ul class="submenu">
             <li>
-              <a class="nf-btn" href="#" title="{{ trans('task.edit') }}">
+              <a class="nf-btn" href="{{ url()->route('task.editProject', array('projectId' => $project->id)) }}" title="{{ trans('task.edit') }}">
                 <span class="btn-img svgicon">
                   @include('macros.svg-icons.settings')
                 </span>

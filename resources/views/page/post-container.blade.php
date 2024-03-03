@@ -4,6 +4,10 @@
             @continue
         @endif
 
-        @include('page.post-content')
+        @if(isset($withLoader) && $withLoader)
+            @include('page.post-content-loader')
+        @else
+            @include('page.post-content')
+        @endif
     @endif
 @endforeach

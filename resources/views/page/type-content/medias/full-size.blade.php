@@ -79,7 +79,7 @@
                             <span class="btn-txt">{{ trans('page.openDocument') }}</span>
                         </div> -->
 
-                        
+
                     </div>
                 </div>
             @endif
@@ -123,7 +123,9 @@
                         <h3 class="panel-document-title">{{ $media->name }}</h3>
                         <p class="panel-document-subtitle">{{ $media->formatSizeUnits() }}</p>
                     </div>
-                    @if($media->mainProfile() != null)
+                    @if($media->mainProfile() != null &&
+                        ((isset($post) && !in_array(class_basename($post), ['Share', 'Media'])) || !isset($post))
+                        )
                         @include('media.partials.menu-actions', [
                             'rights' => $rightsMedia,
                             'profileType' => (isset($post)) ? $post->author->getType() : $media->mainProfile()->getType(),

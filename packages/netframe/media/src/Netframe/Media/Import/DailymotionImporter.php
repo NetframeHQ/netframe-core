@@ -50,6 +50,9 @@ class DailymotionImporter implements ImporterInterface
             //get thumbnail from youtube and record it to local tmp storage
             $fileName = 'dailymotion'.$idDailymotion.'.png';
             $tmpDir = config('media.tmp_storage');
+            if (!file_exists($tmpDir)) {
+                $result = \File::makeDirectory($tmpDir, 0775, true);
+            }
             $imgThumb = $tmpDir.'/'.$fileName;
             file_put_contents($imgThumb, file_get_contents($json['thumbnail_large_url']));
 

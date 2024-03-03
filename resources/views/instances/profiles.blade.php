@@ -122,7 +122,7 @@ var enableTxt = '{{ trans('instances.profiles.enable') }}';
         var jqXhr = $.post(link, params);
 
         jqXhr.success(function(data) {
-            var targetReplace = $(el.closest('.fn-right-management').data('target-return'));
+            var targetReplace = $(el.closest('.submenu').data('target-return'));
             targetReplace.fadeOut('slow', function () {
                 targetReplace.replaceWith(data.view);
                 targetReplace.fadeIn('slow');

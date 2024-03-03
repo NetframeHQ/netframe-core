@@ -1,7 +1,11 @@
 @extends('layouts.boarding')
 
-
 @section('content')
+
+@if(session()->has('boarding_code'))
+    <span class="boarding-code">{{ session('boarding_code') }}</span>
+@endif
+
 <h1 class="mb-2"><span>{{ trans('boarding2020.step2.title1') }} </span>{{ trans('boarding2020.step2.title2') }}</h1>
         <p class="mb-4 mb-md-5">{{ trans('boarding2020.step2.emailSentTo') }} <strong>{{ $boarding->email }}</strong> <a href="{{ url()->route('boarding.home') }}">{{ trans('boarding2020.step2.update') }}</a></p>
         {{ Form::open(['route' => 'boarding.checkcode','id' => 'boarding-checkcode', 'role' => 'form', 'class' => "box"]) }}
@@ -67,6 +71,7 @@ av("visit");
             var pastedCode = valPasted.split('-');
             var codePart1 = pastedCode[0].split('');
             var codePart2 = pastedCode[1].split('');
+
             $("input[name='n1']").val(codePart1[0]);
             $("input[name='n2']").val(codePart1[1]);
             $("input[name='n3']").val(codePart1[2]);

@@ -8,4 +8,6 @@ return array (
   'faq' => 'F.A.Q -  Preguntas Frecuentes',
   'faqShort' => 'ayuda',
   'cgv' => 'Condiciones Generales de `venta',
+  'boarding' => 'Registrate gratis',
+  'login' => 'Conexión',
 );

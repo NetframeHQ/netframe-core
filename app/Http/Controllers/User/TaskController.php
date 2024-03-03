@@ -534,7 +534,12 @@ class TaskController extends BaseController
                 $wf->delete();
             */
         }
-        return response()->json("ok");
+
+        $dataJson = [
+            'delete' => true,
+            'targetId' => '#task-' . $id,
+        ];
+        return response()->json($dataJson);
     }
 
     public function archive()
@@ -1020,11 +1025,26 @@ class TaskController extends BaseController
                 $new->workflows_id = $newWf->id;
             }
             $new->save();
+
+            $cols = $project->template->getCols();
+            $nbCols = 3; // default colsnumber
+            $nbCols += count($cols);
+            if ($project->template->linked) {
+                $nbCols += 3;
+            }
+
             return response()->json([
                 'inserted' => true,
                 'body' => view(
                     'task.row',
-                    ['task' => $new, 'project' => $project, 'template' => $project->template]
+                    [
+                        'task' => $new,
+                        'project' => $project,
+                        'template' => $project->template,
+                        'nbCols' => $nbCols,
+                        'cols' => $cols,
+                        'nbDirectTasks' => $project->directTasks()->count(),
+                    ]
                 )->render()
             ]);
         }

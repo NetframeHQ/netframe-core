@@ -111,7 +111,6 @@ class Share extends Model
 
     public function getFormattedContentAttribute()
     {
-
         $headShare = '';
         if (get_class($this->post) == 'App\Media') {
             $headShare = \HTML::thumbImage(

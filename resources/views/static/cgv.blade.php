@@ -1,20 +1,10 @@
 @extends('layouts.empty')
 
-
 @section('title')
-    netframe :: {{ trans('links.cgv') }}
+    {{ trans('links.cgv') }}
 @stop
 
+
 @section('content')
-    <div class="col-xs-12 col-md-6 offset-md-3 pb-5">
-        <div class="panel default-panel mb-5">
-            <div class="panel-heading">
-                <h1 class="widget-title">{{ trans('links.cgv') }}</h1>
-            </div>
-            <div class="panel-body">
-                @include('lang.'.Lang::locale().'.cgv')
-            </div>
-        </div>
-        @include('static.links')
-    </div>
+    @include('lang.' . Lang::locale() . '.cgv')
 @stop

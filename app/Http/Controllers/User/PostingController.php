@@ -11,6 +11,7 @@ use App\Events\NewPost;
 use App\Events\InterestAction;
 use App\Profile;
 use App\Events\CheckUserTag;
+use App\Calendar;
 
 class PostingController extends BaseController
 {
@@ -32,6 +33,7 @@ class PostingController extends BaseController
         $post_vars = request()->get('post');
         $init_form = (null != request()->get('init_form')) ? true : false;
         */
+        $fromCalendar = (request()->has('fromCalendar') && request()->get('fromCalendar')) ? true : false;
 
         if (request()->isMethod('POST')) {
             $post_type = request()->get('post_type');
@@ -77,8 +79,15 @@ class PostingController extends BaseController
                 'returnMessage' => $data['return_message'],
                 'modal' => $data['modal'],
                 'typePost' => $post_type,
-                'displayMap' => (isset($data['display_map'])) ? $data['display_map'] : false
+                'displayMap' => (isset($data['display_map'])) ? $data['display_map'] : false,
+                'fromCalendar' => $fromCalendar
             ];
+
+            if ($fromCalendar) {
+                $calendar = new Calendar();
+                $event = $calendar->getEvent($data['eventId']);
+                $return['event'] = $event;
+            }
 
             if (isset($data['viewContent'])) {
                 $return['viewContent'] = $data['viewContent'];
@@ -87,6 +96,9 @@ class PostingController extends BaseController
                 } else {
                     $return['targetId'] = $data['targetId'];
                 }
+            }
+            if (isset($data['targetMapId'])) {
+                $return['targetMapId'] = $data['targetMapId'];
             }
 
             if (isset($data['autoFireModal'])) {
@@ -113,6 +125,7 @@ class PostingController extends BaseController
             $data['modal'] = true;
             $data['form_id'] = 'form-post-'.rand();
             $data['typePost'] = $post_type;
+            $data['fromCalendar'] = $fromCalendar;
             return  view('posting.posting-container', $data)->render();
 
             // preparation for in place editing
@@ -201,6 +214,7 @@ class PostingController extends BaseController
                 if (in_array(request()->get('type_foreign'), ['house', 'project', 'community'])) {
                     $profileModel = Profile::gather(request()->get('type_foreign'));
                     $profile = $profileModel::find(request()->get('id_foreign'));
+                    $mediaFolderProfile = $profile->getDefaultFolder('__posts_medias');
                     if ($profile->confidentiality == 0) {
                         $confidentiality = 0;
                     }
@@ -235,6 +249,9 @@ class PostingController extends BaseController
                     $post->medias()->attach($mediaId);
                     if ($mediaFolder != null) {
                         $post->author->medias()->attach($mediaId, ['medias_folders_id' => $mediaFolder]);
+                    }
+                    if (isset($profile) && $profile != $post->author && $mediaFolderProfile != null) {
+                        $profile->medias()->attach($mediaId, ['medias_folders_id' => $mediaFolderProfile]);
                     }
                 }
 
@@ -278,6 +295,7 @@ class PostingController extends BaseController
                     event(new InterestAction(auth()->guard('web')->user(), $post->tags, 'post.create'));
                 }
 
+                sleep(2);
                 //implement post view to add or replace in newsfeed
                 $data['viewContent'] = view(
                     'page.post-content',
@@ -464,6 +482,7 @@ class PostingController extends BaseController
                 if (in_array(request()->get('type_foreign'), ['house', 'project', 'community'])) {
                     $profileModel = Profile::gather(request()->get('type_foreign'));
                     $profile = $profileModel::find(request()->get('id_foreign'));
+                    $mediaFolderProfile = $profile->getDefaultFolder('__posts_medias');
                     if ($profile->confidentiality == 0) {
                         $confidentiality = 0;
                     }
@@ -532,6 +551,9 @@ class PostingController extends BaseController
                     if ($mediaFolder != null) {
                         $post->author->medias()->attach($mediaId, ['medias_folders_id' => $mediaFolder]);
                     }
+                    if (isset($profile) && $profile != $post->author && $mediaFolderProfile != null) {
+                        $profile->medias()->attach($mediaId, ['medias_folders_id' => $mediaFolderProfile]);
+                    }
                 }
                 //place media linked state
                 Media::whereIn('id', $medias)->update(['linked' => 1, 'confidentiality'=> $confidentiality]);
@@ -573,6 +595,7 @@ class PostingController extends BaseController
                     event(new InterestAction(auth()->guard('web')->user(), $post->tags, 'post.create'));
                 }
 
+                sleep(2);
                 //implement post view to add or replace in newsfeed
                 $data['viewContent'] = view(
                     'page.post-content',
@@ -584,6 +607,7 @@ class PostingController extends BaseController
                 } else {
                     $data['targetId'] = '.feed-'.class_basename($post->author).'-'.$post->author_id;
                 }
+                $data['targetMapId'] = '#TEvent-' . class_basename($post->posts()->first()->author) . '-' . $post->id;
 
                 $data['autoFireModal'] = view(
                     'posting.success',
@@ -591,6 +615,7 @@ class PostingController extends BaseController
                 )->render();
 
                 //reinit vars for empty form
+                $data['eventId'] = $post->id;
                 $post = new TEvent();
                 $data['mediasIds'] = null;
                 $data['linksIds'] = null;
@@ -639,7 +664,6 @@ class PostingController extends BaseController
 
         $data['post'] = $post;
         $data['sub_view'] = $sub_view;
-
         return $data;
     }
 
@@ -727,6 +751,7 @@ class PostingController extends BaseController
                 if (in_array(request()->get('type_foreign'), ['house', 'project', 'community'])) {
                     $profileModel = Profile::gather(request()->get('type_foreign'));
                     $profile = $profileModel::find(request()->get('id_foreign'));
+                    $mediaFolderProfile = $profile->getDefaultFolder('__posts_medias');
                     if ($profile->confidentiality == 0) {
                         $confidentiality = 0;
                     }
@@ -789,6 +814,9 @@ class PostingController extends BaseController
                     if ($mediaFolder != null) {
                         $post->author->medias()->attach($mediaId, ['medias_folders_id' => $mediaFolder]);
                     }
+                    if (isset($profile) && $profile != $post->author && $mediaFolderProfile != null) {
+                        $profile->medias()->attach($mediaId, ['medias_folders_id' => $mediaFolderProfile]);
+                    }
                 }
                 //place media linked state
                 Media::whereIn('id', $medias)->update(['linked' => 1, 'confidentiality'=> $confidentiality ]);
@@ -818,6 +846,7 @@ class PostingController extends BaseController
                 // Save the tags
                 \App\Helpers\TagsHelper::attachPostedTags(request()->get('tags'), $post);
 
+                sleep(2);
                 //implement post view to replace in newsfeed
                 $data['viewContent'] = view(
                     'page.post-content',
@@ -828,6 +857,8 @@ class PostingController extends BaseController
                 } else {
                     $data['targetId'] = '.feed-' . class_basename($post->author) . '-' . $post->author_id;
                 }
+
+                $data['targetMapId'] = '#Offer-' . class_basename($post->posts()->first()->author) . '-' . $post->id;
 
                 $data['autoFireModal'] = view(
                     'posting.success',

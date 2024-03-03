@@ -42,6 +42,8 @@ describe('Boarding', () => {
     cy.get('form#boarding button[type="submit"]').click();
     //cy.location('pathname').should('eq', '/boarding/send-code');
     cy.location('pathname').should('match', /^\/boarding/);
+	
+	cy.screenshot('boarding-input-code');
 
     cy.get('form#boarding-checkcode').within(() => {
       cy.get('div.input').children('input')
@@ -49,5 +51,10 @@ describe('Boarding', () => {
         .and('match', /^n\d/);
       cy.get('button').should('have.attr', 'type', 'submit');
     });
+    cy.get('span.boarding-code').then($value => {
+        const textValue = $value.text().replace("-", "")
+        cy.get('form#boarding-checkcode input[name="n1"]').type(textValue);
+        cy.get('form#boarding-checkcode button[type="submit"]').click();
+    })
   });
 });

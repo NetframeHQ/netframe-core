@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: {{ .Chart.Name }}-netframe
+  namespace: {{ .Release.Namespace | quote }}
+
+  labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 4 }}
+    app.kubernetes.io/component: "netframe"
+    app.kubernetes.io/version: {{ required "Value appVersionNetframe is required" .Values.appVersionNetframe | quote }}
+
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name | quote }}
+      app.kubernetes.io/component: "netframe"
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "nfs"
+  resources:
+    requests:
+      storage: {{ required "Value appStorageNetframe is required" .Values.appStorageNetframe | quote }}

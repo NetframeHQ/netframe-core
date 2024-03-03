@@ -131,17 +131,20 @@ class GraphicalController extends BaseController
          * rectangle logo light and dark
          *
          */
-        $mainLogo = $instance->getParameter('main_logo_2018');
-        if ($mainLogo == null) {
+        $mainLogoDb = $instance->getParameter('main_logo_2018');
+        if ($mainLogoDb == null) {
             $mainLogo = asset('assets/img/widget-logo.png');
         } else {
-            $data['mainLogoFile'] = $mainLogo;
+            $data['mainLogoFile'] = $mainLogoDb;
             $mainLogo = url()->route('instance.download', ['parametername' => 'main_logo_2018']);
         }
 
         $mainLogoDark = $instance->getParameter('main_logo_2018_dark');
-        if ($mainLogoDark == null) {
-            $mainLogoDark = $mainLogo;
+        if ($mainLogoDark == null && $mainLogoDb == null) {
+            $mainLogoDark = asset('assets/img/widget-logo-dark.png');
+        } elseif ($mainLogoDark == null && $mainLogoDb != null) {
+            $data['mainLogoFile'] = $mainLogoDb;
+            $mainLogoDark = url()->route('instance.download', ['parametername' => 'main_logo_2018']);
         } else {
             $data['mainLogoFile'] = $mainLogoDark;
             $mainLogoDark = url()->route('instance.download', ['parametername' => 'main_logo_2018_dark']);
@@ -167,13 +170,13 @@ class GraphicalController extends BaseController
                 $reactions = str_split($values, 4);
                 if (count($reactions)!=5) {
                     return redirect()->route('instance.graphical')
-                    ->withInput()
-                    ->withErrors(['reactions'=>'buttonsSize']);
+                        ->withInput()
+                        ->withErrors(['reactions'=>'buttonsSize']);
                 }
 
                 $emojis = \App\Emoji::selectRaw('id')
-                ->whereRaw("value in ('".implode('\',\'', $reactions)."' COLLATE utf8mb4_bin)")
-                ->get();
+                    ->whereRaw("value in ('".implode('\',\'', $reactions)."' COLLATE utf8mb4_bin)")
+                    ->get();
                 $emojis = array_map(function ($emoji) {
                     return $emoji['id'];
                 }, $emojis->toArray());
@@ -254,6 +257,7 @@ class GraphicalController extends BaseController
 
         $defaultMenuLogo = asset('assets/img/logo.png');
         $defaultMainLogo = asset('assets/img/widget-logo.png');
+        $defaultMainLogoDark = asset('assets/img/widget-logo-dark.png');
         $data['cssColors'] = $cssColors;
         $data['paramCss'] = (isset($paramCss[$mainTheme])) ? $paramCss[$mainTheme] : null;
         $data['cssColorsTheme'] = $cssColorsTheme;
@@ -263,6 +267,7 @@ class GraphicalController extends BaseController
         $data['menuLogoDark'] = $menuLogoDark;
         $data['mainLogoDark'] = $mainLogoDark;
         $data['defaultMainLogo'] = $defaultMainLogo;
+        $data['defaultMainLogoDark'] = $defaultMainLogoDark;
         $data['defaultMenuLogo'] = $defaultMenuLogo;
         $data['bgScreen'] = $bgScreen;
         $data['navTheme'] = $navTheme;
@@ -290,7 +295,7 @@ class GraphicalController extends BaseController
             $uploadConfig = $mediasConfig['mediaTypes'][$mediaType];
 
             $storage_dir = env('NETFRAME_DATA_PATH', base_path())
-            . '/storage/uploads/instances/'
+                . '/storage/uploads/instances/'
                 . $instance->id
                 . '/' . $uploadConfig['storageDir'];
             if (!file_exists($storage_dir)) {

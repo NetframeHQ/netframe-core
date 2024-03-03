@@ -107,6 +107,7 @@ class StringHelper
     public static function formatPostText($content)
     {
         $content = nl2br($content);
+        $content = html_entity_decode($content);
 
         // Link attributes
         $attr = '';
@@ -261,6 +262,7 @@ class StringHelper
 
     public static function collapsePostText($content, $maxLength = 200)
     {
+        $content = html_entity_decode($content);
         $contentLength = mb_strlen($content);
         if ($contentLength > $maxLength) {
             $uniqId = uniqid('moreContent');

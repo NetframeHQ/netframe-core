@@ -36,12 +36,10 @@ class TaskRow extends Model
                 $comment->delete();
             });
 
-            /*
-            $project = $row->project;
-            $project->comments()->get()->each(function($comment){
-                $comment->delete();
-            });
-            */
+            // delete notifications
+            $notifications = Notif::where('type', '=', 'assign_task')
+                ->where('parameter', 'LIKE', '%task_id":' . $row->id . '}')
+                ->delete();
         });
     }
 

@@ -31,8 +31,12 @@ class VimeoImporter implements ImporterInterface
 
             //get thumbnail from youtube and record it to local tmp storage
 
-            $fileName = 'vimeo'.$matches[5].'.jpg';
+            $fileName = 'vimeo' . $matches[5] . '.jpg';
             $tmpDir = config('media.tmp_storage');
+            if (!file_exists($tmpDir)) {
+                $result = \File::makeDirectory($tmpDir, 0775, true);
+            }
+
             $imgThumb = $tmpDir.'/'.$fileName;
             file_put_contents($imgThumb, file_get_contents($json[0]['thumbnail_large']));
 

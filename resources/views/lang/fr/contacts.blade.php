@@ -1,7 +1,7 @@
 <p>
-Une question ? : <a href="mailto:contact@netframe.fr">contact@netframe.fr</a>
+Une question ? : <a href="mailto:contact@netframe.co">contact@netframe.co</a>
 </p>
 
 <p>
-Un problème technique ? : <a href="mailto:tech@netframe.fr">tech@netframe.fr</a>
+Un problème technique ? : <a href="mailto:tech@netframe.co">tech@netframe.co</a>
 </p>

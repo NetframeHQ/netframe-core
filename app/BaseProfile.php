@@ -245,7 +245,7 @@ abstract class BaseProfile extends Model
      */
     public function offers()
     {
-        return $this->morphMany('App\Offer', 'profile');
+        return $this->morphMany('App\Offer', 'author');
     }
 
     /**
@@ -711,5 +711,11 @@ abstract class BaseProfile extends Model
         } else {
             return config('rights.groups.' . $roleKey);
         }
+    }
+
+    public function stats()
+    {
+        return $this->morphMany('App\Stat', 'entity')
+            ->where('instances_id', '=', session('instanceId'));
     }
 }

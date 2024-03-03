@@ -30,6 +30,6 @@
     </div>
 
     @include('layouts.partials.scripts-footer')
-
+    @yield('javascripts')
 </body>
 </html>

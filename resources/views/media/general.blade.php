@@ -35,9 +35,11 @@
 
                     @if (\App\Instance::find(session('instanceId'))->hasApplication('office'))
                         <li>
-                            <a href="{{ url()->route('medias_explorer', ['profileType' => 'user', 'profileId' => auth()->guard('web')->user()->id]) }}"
+                            <a href="{{ url()->route('office.create', ['documentType' => 'document', 'profileType' => 'user', 'profileId' => auth('web')->user()->id]) }}"
                             title="{{ trans('xplorer.plusMenu.addDoc') }}"
-                            class="nf-btn"
+                            class="fn-add-file nf-btn"
+                            data-toggle="modal"
+                            data-target="#modal-ajax"
                             >
                                 <span class="svgicon btn-img add-office-text">
                                     @include('macros.svg-icons.add-file')
@@ -50,9 +52,11 @@
 
                         <li>
                             <a
-                                href="{{ url()->route('medias_explorer', ['profileType' => 'user', 'profileId' => auth()->guard('web')->user()->id]) }}"
-                                class="nf-btn"
+                                href="{{ url()->route('office.create', ['documentType' => 'spreadsheet', 'profileType' => 'user', 'profileId' => auth('web')->user()->id]) }}"
                                 title="{{ trans('xplorer.plusMenu.addXls') }}"
+                                class="fn-add-file nf-btn"
+                                data-toggle="modal"
+                                data-target="#modal-ajax"
                             >
                                 <span class="svgicon btn-img add-office-sheet">
                                     @include('macros.svg-icons.add-file')
@@ -65,9 +69,11 @@
 
                         <li>
                             <a
-                                href="{{ url()->route('medias_explorer', ['profileType' => 'user', 'profileId' => auth()->guard('web')->user()->id]) }}"
-                                class="nf-btn"
+                                href="{{ url()->route('office.create', ['documentType' => 'presentation', 'profileType' => 'user', 'profileId' => auth('web')->user()->id]) }}"
                                 title="{{ trans('xplorer.file.add.title') }}"
+                                class="fn-add-file nf-btn"
+                                data-toggle="modal"
+                                data-target="#modal-ajax"
                             >
                                 <span class="svgicon btn-img add-office-slide">
                                     @include('macros.svg-icons.add-file')

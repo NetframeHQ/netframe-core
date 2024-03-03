@@ -22,7 +22,7 @@
     </div>
     <ul class="nf-actions">
         <li class="nf-action">
-            <a class="nf-btn" href="{{ url()->route('posting.default', ['post_type' => 'event']) }}" data-toggle="modal" data-target="#modal-ajax" >
+            <a class="nf-btn" href="{{ url()->route('posting.default', ['post_type' => 'event']) }}?fromCalendar=1" data-toggle="modal" data-target="#modal-ajax" >
                 <span class="svgicon btn-img">
                     @include('macros.svg-icons.plus')
                 </span>
@@ -86,6 +86,9 @@
     var calendarUrl = "{{ url()->route('calendar.dates', ['type' => 'timeline']) }}";
 @endif
 
+var startDate;
+var endDate;
+
 $(document).ready(function(){
     $('#calendar').fullCalendar({
         //theme: true,
@@ -110,8 +113,7 @@ $(document).ready(function(){
             error: function() {
                 $('#script-warning').show();
             },
-            success: function(){
-                //alert("successful: You can now do your stuff here. You dont need ajax. Full Calendar will do the ajax call OK? ");
+            success: function(data){
             }
         },
         loading: function(bool) {

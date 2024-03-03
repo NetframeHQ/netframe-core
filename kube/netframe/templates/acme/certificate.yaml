@@ -1,0 +1,20 @@
+{{- if eq .Values.appProtocol "https" -}}
+apiVersion: voyager.appscode.com/v1beta1
+kind: Certificate
+
+metadata:
+  name: {{ .Chart.Name | quote }}
+  namespace: {{ .Release.Namespace | quote }}
+
+  labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 4 }}
+    app.kubernetes.io/component: "acme"
+
+spec:
+  domains:
+    - {{ print "*." (required "Value appHost is required" .Values.appHost) | quote }}
+  acmeUserSecretName: {{ .Chart.Name }}-acme
+  challengeProvider:
+    dns:
+      provider: ovh
+      credentialSecretName: {{ .Chart.Name }}-acme
+{{- end -}}

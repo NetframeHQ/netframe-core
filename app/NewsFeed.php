@@ -129,7 +129,7 @@ class NewsFeed extends Model
 
         if (get_class($profile) != 'App\User') {
             //return $profile->posts()
-            return NewsFeed::where('instances_id', '=', session('instanceId'))
+            $nf = NewsFeed::where('instances_id', '=', session('instanceId'))
                 //->where('news_feeds.post_type', '!=', 'App\TaskTable')
                 ->where(function ($wAuthor) use ($profile) {
                     $wAuthor->orWhere(function ($wA) use ($profile) {
@@ -179,8 +179,9 @@ class NewsFeed extends Model
                 ->where('pintop', '!=', '1')
                 ->groupBy('news_feeds.id')
                 ->orderBy('created_at', 'desc')
-                ->take($config['number_post'])
-                ->with([
+                ->take($config['number_post']);
+            if ($idNewsFeed != null) {
+                $nf->with([
                     'post',
                     'views',
                     'author',
@@ -197,10 +198,11 @@ class NewsFeed extends Model
                     'post.lastComments',
                     'post.lastComments.replies',
                     'post.lastComments.replies.replies',
-                ])
-                ->get();
+                ]);
+            }
+            return $nf->get();
         } elseif (!$userTimeline) { // user public page
-            return NewsFeed::select('news_feeds.*')
+            $nf = NewsFeed::select('news_feeds.*')
                 //->where('news_feeds.post_type', '!=', 'App\TaskTable')
                 ->where('news_feeds.author_id', '=', $id)
                 ->where('news_feeds.author_type', '=', 'App\User')
@@ -226,8 +228,9 @@ class NewsFeed extends Model
                 ->groupBy('news_feeds.post_type')
                 ->groupBy('news_feeds.post_id')
                 ->orderBy('news_feeds.created_at', 'desc')
-                ->take($config['number_post'])
-                ->with([
+                ->take($config['number_post']);
+            if ($idNewsFeed != null) {
+                $nf->with([
                     'post',
                     'views',
                     'author',
@@ -244,10 +247,11 @@ class NewsFeed extends Model
                     'post.lastComments',
                     'post.lastComments.replies',
                     'post.lastComments.replies.replies',
-                ])
-                ->get();
+                ]);
+            }
+            return $nf->get();
         } else { // user timeline
-            return NewsFeed::select('news_feeds.*')
+            $nf = NewsFeed::select('news_feeds.*')
                 //->where('news_feeds.post_type', '!=', 'App\TaskTable')
                 ->leftJoin('subscriptions as sub', function ($joinS) {
                     $joinS->on('sub.profile_type', '=', 'news_feeds.author_type')
@@ -298,8 +302,10 @@ class NewsFeed extends Model
                 ->groupBy('news_feeds.post_type')
                 ->groupBy('news_feeds.post_id')
                 ->orderBy('news_feeds.updated_at', 'desc')
-                ->take($config['number_post'])
-                ->with([
+                ->take($config['number_post']);
+
+            if ($idNewsFeed != null) {
+                $nf->with([
                     'post',
                     'views',
                     'author',
@@ -316,8 +322,9 @@ class NewsFeed extends Model
                     'post.lastComments',
                     'post.lastComments.replies',
                     'post.lastComments.replies.replies',
-                ])
-                ->get();
+                ]);
+            }
+            return $nf->get();
         }
     }
 
@@ -359,20 +366,23 @@ class NewsFeed extends Model
     public function view()
     {
         $userId = auth()->guard('web')->user()->id;
-        if (!($this->author_type=="App\\User" && $this->author_id==$userId)) {
-            $view = View::where([
-                'post_id' => $this->id,
-                'post_type' => get_class($this),
-                'users_id' => $userId
-            ])->first();
+        $view = View::where([
+            'post_id' => $this->id,
+            'post_type' => get_class($this),
+            'users_id' => $userId
+        ])
+        //->whereDate('created_at', '=', date('Y-m-d'))
+        ->first();
 
-            if (!$view) {
-                \DB::table('views')->insert([
-                    'post_id' => $this->id,
-                    'post_type' => get_class($this),
-                    'users_id' => $userId
-                ]);
-            }
+        if (!$view) {
+            $v = new View();
+            $v->post_id = $this->id;
+            $v->post_type = get_class($this);
+            $v->users_id = $userId;
+            $v->save();
+        } else {
+            $view->created_at = date('Y-m-d');
+            $view->save();
         }
     }
 }

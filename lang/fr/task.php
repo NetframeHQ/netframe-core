@@ -21,7 +21,7 @@ return [
     "confirmDuplicate" => "Voulez-vous dupliquer cet élément ?",
     "editTemplates" => "Editer les templates",
     "already" => "Ce nom de project existe déjà",
-    "switch" => "Gestion des tâches",
+    "switch" => "Activer l'affectation des tâches aux utilisateurs",
     "invalid" => "Valeur non valide",
     "requiredName" => "Le champ nom est obligatoire",
     "cantDelete" => "Ce template ne peut être supprimé, des projets lui sont reliés",
@@ -88,5 +88,12 @@ return [
         'status' => 'Statut',
         'userInfos' => 'Utilisateur(s) / infos',
         'delay' => 'Echéance',
+    ],
+    'sample' => [
+        'title' => 'Exemple',
+        'colTxt' => 'Colonne 1 (texte)',
+        'colEmail' => 'Colonne 2 (email)',
+        'colDate' => 'Colonne 3 (date)',
+        'colFile' => 'Colonne 4 (fichier)',
     ],
 ];

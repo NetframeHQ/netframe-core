@@ -1,0 +1,43 @@
+apiVersion: voyager.appscode.com/v1beta1
+kind: Ingress
+metadata:
+  name: netframe
+  namespace: netframe-local
+  annotations:
+    ingress.appscode.com/type: LoadBalancer
+spec:
+  rules:
+    - host: "broadcast1.netframe.local"
+      http:
+        nodePort: "80"
+        paths:
+          - path: "/socket.io"
+            backend:
+              serviceName: netframe-broadcast
+              servicePort: "6001"
+    - http:
+        nodePort: "80"
+        paths:
+          - path: "/socket.io"
+            backend:
+              serviceName: netframe-collab
+              servicePort: "3000"
+          - path: "/ws"
+            backend:
+              serviceName: netframe-broadcast
+              servicePort: "6001"
+              rewriteRules:
+                - "^([^\\ :]*)\\ /ws/(.*)$ \\1\\ /\\2"
+          - path: "/onlyoffice"
+            backend:
+              serviceName: netframe-onlyoffice
+              servicePort: "80"
+              headerRules:
+                - X-Forwarded-Host %[req.hdr(Host)]/onlyofficeds
+                - X-Forwarded-Proto http
+                - Connection upgrade
+              rewriteRules:
+                - "^([^\\ :]*)\\ /onlyofficeds/(.*)$ \\1\\ /\\2"
+          - backend:
+              serviceName: netframe-netframe
+              servicePort: "80"

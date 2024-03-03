@@ -16,24 +16,26 @@ class Calendar
     private $startArray;
     private $endArray;
 
-    public function __construct($start, $end)
+    public function __construct($start = null, $end = null)
     {
-        // format dates and times
-        $startArray = explode(' ', $start);
-        $endArray = explode(' ', $end);
+        if ($start != null && $end != null) {
+            // format dates and times
+            $startArray = explode(' ', $start);
+            $endArray = explode(' ', $end);
 
-        if (!isset($startArray[1])) {
-            $startArray[1] = '00:00:00';
+            if (!isset($startArray[1])) {
+                $startArray[1] = '00:00:00';
+            }
+
+            if (!isset($endArray[1])) {
+                $endArray[1] = '00:00:00';
+            }
+
+            $this->start = $start;
+            $this->end = $end;
+            $this->startArray = $startArray;
+            $this->endArray = $endArray;
         }
-
-        if (!isset($endArray[1])) {
-            $endArray[1] = '00:00:00';
-        }
-
-        $this->start = $start;
-        $this->end = $end;
-        $this->startArray = $startArray;
-        $this->endArray = $endArray;
     }
 
     private function timeline($profile_type = null, $profile_id = null)
@@ -198,6 +200,77 @@ class Calendar
         return $events;
     }
 
+    // get a single event
+    public function getEvent($eventId)
+    {
+        $event = TEvent::find($eventId);
+        return $this->getEventDetail($event);
+    }
+
+
+    // get event details
+    private function getEventDetail($event)
+    {
+        $startEvent = $event->date.' '.$event->time;
+        $startEvent = \App\Helpers\DateHelper::convertFromLocalUTC($startEvent)['datetime'];
+
+        // get owner profile
+        $profile = $event->posts()->first()->author;
+        $color = $this->getColor($profile);
+
+        if ($event->date_end == null) {
+            $endEvent = \Carbon\Carbon::parse($startEvent)->addHour();
+        } else {
+            $endEvent = $event->date_end.' '.$event->time_end;
+        }
+        $endEvent = \App\Helpers\DateHelper::convertFromLocalUTC($endEvent)['datetime'];
+        if ($event->time == null) {
+            return [
+                'url' => $event->getUrl(),
+                'title' => html_entity_decode($event->title),
+                'start' => $event->date,
+                'end' => $event->date_end,
+                'color' => $color,
+                'allDay' => true,
+            ];
+        } else {
+            return [
+                'url' => $event->getUrl(),
+                'title' => html_entity_decode($event->title),
+                'start' => $startEvent,
+                'end' => $endEvent,
+                'color' => $color,
+                'allDay' => false,
+            ];
+        }
+    }
+
+    // get event color
+    private function getColor($profile)
+    {
+        $color = '#ffffff';
+
+        switch (class_basename($profile)) {
+            case 'Project':
+                $color = "#4AB348";
+                break;
+
+            case 'User':
+                $color = "#7C58C5";
+                break;
+
+            case 'Community':
+                $color = "rgba(var(--nf-accentColor), 1)";
+                break;
+
+            case 'House':
+                $color = "#3C78EE";
+                break;
+        }
+
+        return $color;
+    }
+
     /*
      * return json of events reletad to a type : allEvents, timeline, profile, user
      */
@@ -208,56 +281,9 @@ class Calendar
         $events = [];
 
         foreach ($dataCalendar as $eventDate) {
-            $startEvent = $eventDate->date.' '.$eventDate->time;
-            $startEvent = \App\Helpers\DateHelper::convertFromLocalUTC($startEvent)['datetime'];
+            $event = $this->getEventDetail($eventDate);
 
-            $color = '#ffffff';
-
-            // get owner profile
-            $profile = $eventDate->posts()->first()->author;
-            switch (class_basename($profile)) {
-                case 'Project':
-                    $color = "#4AB348";
-                    break;
-
-                case 'User':
-                    $color = "#7C58C5";
-                    break;
-
-                case 'Community':
-                    $color = "rgba(var(--nf-accentColor), 1)";
-                    break;
-
-                case 'House':
-                    $color = "#3C78EE";
-                    break;
-            }
-
-            if ($eventDate->date_end == null) {
-                $endEvent = \Carbon\Carbon::parse($startEvent)->addHour();
-            } else {
-                $endEvent = $eventDate->date_end.' '.$eventDate->time_end;
-            }
-            $endEvent = \App\Helpers\DateHelper::convertFromLocalUTC($endEvent)['datetime'];
-            if ($eventDate->time == null) {
-                $events[] = [
-                    'url' => $eventDate->getUrl(),
-                    'title' => html_entity_decode($eventDate->title),
-                    'start' => $eventDate->date,
-                    'end' => $eventDate->date_end,
-                    'color' => $color,
-                    'allDay' => true,
-                ];
-            } else {
-                $events[] = [
-                    'url' => $eventDate->getUrl(),
-                    'title' => html_entity_decode($eventDate->title),
-                    'start' => $startEvent,
-                    'end' => $endEvent,
-                    'color' => $color,
-                    'allDay' => false,
-                ];
-            }
+            $events[] = $event;
         }
 
         return json_encode($events);

@@ -11,7 +11,6 @@ require('laravel-mix-svg');
  |
  */
 
-/*
 mix.webpackConfig({
     entry: {
         style: ['./resources/sass/style.scss'],
@@ -33,7 +32,7 @@ mix.options({
     .copy('resources/sass/themes/previews/pink.png', 'public/css/theme/pink/preview.png')
     .copy('resources/sass/themes/previews/blue.png', 'public/css/theme/blue/preview.png')
     .version();
-*/
+
 
 // collab server
 mix.js('resources/js/app.js', 'public/js/');
@@ -53,3 +52,6 @@ mix.js('resources/js/channel.js', 'public/js/')
 // autocomplete
 //mix.copy(['node_modules/@tarekraafat/autocomplete.js/dist/autoComplete.js'], 'resources/js/autocomplete/');
 mix.combine('resources/js/autocomplete/*.js', 'public/js/autocomplete.js')
+
+// chartjs
+mix.copy('node_modules/chart.js/dist/chart.js', 'public/packages/chart.js/chart.js');

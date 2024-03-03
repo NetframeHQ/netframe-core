@@ -10,9 +10,15 @@
     <div class="login-container">
         <div class="login-visual">
             @if(isset($instanceLogo))
-                <img src="{{ $instanceLogo }}" class="img-fluid center-block">
+                <img src="{{ $instanceLogo }}" class="img-fluid center-block menu-logo-light {{ (isset($disableCssMode)) ? $disableCssMode : '' }}">
             @else
-                <img src="{{ asset('assets/img/widget-logo.png') }}" class="img-fluid center-block">
+                <img src="{{ asset('assets/img/widget-logo.png') }}" class="img-fluid center-block menu-logo-light {{ (isset($disableCssMode)) ? $disableCssMode : '' }}">
+            @endif
+
+            @if(isset($instanceLogoDark))
+                <img src="{{ $instanceLogoDark }}" class="img-fluid center-block menu-logo-dark {{ (isset($disableCssMode)) ? $disableCssMode : '' }}">
+            @else
+                <img src="{{ asset('assets/img/widget-logo-dark.png') }}" class="img-fluid center-block menu-logo-dark {{ (isset($disableCssMode)) ? $disableCssMode : '' }}">
             @endif
         </div>
 
@@ -44,7 +50,6 @@
         <button type="submit" class="login-submit">{{ trans('form.send') }}</button>
     @endif
     {{ Form::close() }}
-
-@include('static.links')
 </div>
+@include('static.links')
 @stop

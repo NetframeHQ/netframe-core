@@ -8,4 +8,6 @@ return array (
   'faq' => 'F.A.Q.',
   'faqShort' => 'help',
   'cgv' => 'General Conditions of Sale',
+  'boarding' => 'Sign-up for free',
+  'login' => 'Login',
 );

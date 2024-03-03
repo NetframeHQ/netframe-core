@@ -28,6 +28,10 @@ class YoutubeImporter implements ImporterInterface
             //get thumbnail from youtube and record it to local tmp storage
             $fileName = 'youtube'.$matches[0].'.jpg';
             $tmpDir = config('media.tmp_storage');
+            if (!file_exists($tmpDir)) {
+                $result = \File::makeDirectory($tmpDir, 0775, true);
+            }
+
             $imgThumb = $tmpDir.'/'.$fileName;
             file_put_contents(
                 $imgThumb,

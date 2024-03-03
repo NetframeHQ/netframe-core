@@ -2,6 +2,23 @@ String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
+function loadTimelinePosts() {
+    $(document).find('div.post-loader[data-news-loaded="0"]').each(function(){
+        let container = $(this);
+        let newsFeedUrl = $(this).data('news-feed-url');
+        $.ajax({
+            url: newsFeedUrl + '?fromAjax=1',
+            type: "GET",
+            success: function( data ) {
+                container.replaceWith(data.view);
+                loadMapEvents(data.containerId);
+            },
+            error: function(textStatus, errorThrown) {
+                console.log(textStatus);
+            }
+        });
+    });
+}
 
 function multiDimensionArray2JSON(thearray) {
     var output = '';
@@ -192,7 +209,7 @@ function submitModal(event, _form){
 
 function loadMapEvents(mainContainer)
 {
-    $(mainContainer+' .panel-event-map').each(function(e){
+    $(mainContainer + ' .panel-event-map').each(function(e){
         var currentEvent = $(this);
         var currentMapLatitude = parseFloat(currentEvent.data('latitude'));
         var currentMapLongitude = parseFloat(currentEvent.data('longitude'));

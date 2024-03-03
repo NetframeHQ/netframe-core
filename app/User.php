@@ -197,7 +197,8 @@ class User extends Authenticatable //implements UserInterface, RemindableInterfa
     public function virtualUsers()
     {
         return $this->hasMany('App\VirtualUser', 'users_id', 'id')
-            ->orderBy('lastname', 'firstname');
+            ->orderBy('lastname', 'asc')
+            ->orderBy('firstname', 'asc');
     }
 
     /*
@@ -251,51 +252,61 @@ class User extends Authenticatable //implements UserInterface, RemindableInterfa
         $profilesAuth = json_decode($instance->getParameter('profile_profile'), true);
 
         $profilesRights = [];
-        $profilesRights['userCanCreate'] = $profilesAuth[$userRole];
+        if (!$this->visitor) {
+            $profilesRights['userCanCreate'] = $profilesAuth[$userRole];
 
-        if (session('instanceMonoProfile')) {
-            //communityBy
-            $profilesRights['communityBy'] = [
-                'user' => $profilesAuth[$userRole]['community'],
-                'community' => $profilesAuth['community']['community'],
-            ];
-            //channelBy
-            $profilesRights['channelBy'] = [
-                'user' => $profilesAuth[$userRole]['channel'],
-                'community' => $profilesAuth['community']['channel'],
-            ];
-        } else {
-            //houseBy
-            $profilesRights['houseBy'] = [
-                'user' => $profilesAuth[$userRole]['house'],
-                'house' => $profilesAuth['house']['house'],
-                'community' => $profilesAuth['community']['house'],
-                'project' => $profilesAuth['project']['house'],
-            ];
-            //communityBy
-            $profilesRights['communityBy'] = [
-                'user' => $profilesAuth[$userRole]['community'],
-                'house' => $profilesAuth['house']['community'],
-                'community' => $profilesAuth['community']['community'],
-                'project' => $profilesAuth['project']['community'],
-            ];
-            //projectBy
-            $profilesRights['projectBy'] = [
-                'user' => $profilesAuth[$userRole]['project'],
-                'house' => $profilesAuth['house']['project'],
-                'community' => $profilesAuth['community']['project'],
-                'project' => $profilesAuth['project']['project'],
-            ];
-            //channelBy
-            $profilesRights['channelBy'] = [
-                'user' => $profilesAuth[$userRole]['channel'],
-                'house' => $profilesAuth['house']['channel'],
-                'community' => $profilesAuth['community']['channel'],
-                'project' => $profilesAuth['project']['channel'],
-            ];
+            if (session('instanceMonoProfile')) {
+                //communityBy
+                $profilesRights['communityBy'] = [
+                    'user' => $profilesAuth[$userRole]['community'],
+                    'community' => $profilesAuth['community']['community'],
+                ];
+                //channelBy
+                $profilesRights['channelBy'] = [
+                    'user' => $profilesAuth[$userRole]['channel'],
+                    'community' => $profilesAuth['community']['channel'],
+                ];
+            } else {
+                //houseBy
+                $profilesRights['houseBy'] = [
+                    'user' => $profilesAuth[$userRole]['house'],
+                    'house' => $profilesAuth['house']['house'],
+                    'community' => $profilesAuth['community']['house'],
+                    'project' => $profilesAuth['project']['house'],
+                ];
+                //communityBy
+                $profilesRights['communityBy'] = [
+                    'user' => $profilesAuth[$userRole]['community'],
+                    'house' => $profilesAuth['house']['community'],
+                    'community' => $profilesAuth['community']['community'],
+                    'project' => $profilesAuth['project']['community'],
+                ];
+                //projectBy
+                $profilesRights['projectBy'] = [
+                    'user' => $profilesAuth[$userRole]['project'],
+                    'house' => $profilesAuth['house']['project'],
+                    'community' => $profilesAuth['community']['project'],
+                    'project' => $profilesAuth['project']['project'],
+                ];
+                //channelBy
+                $profilesRights['channelBy'] = [
+                    'user' => $profilesAuth[$userRole]['channel'],
+                    'house' => $profilesAuth['house']['channel'],
+                    'community' => $profilesAuth['community']['channel'],
+                    'project' => $profilesAuth['project']['channel'],
+                ];
+            }
         }
-
         return $profilesRights;
+    }
+
+    /*
+     * return user role (participant, administrator = owner, manager)
+     */
+    public function getInstanceRoleId()
+    {
+        $userInstance = $this->instances()->where('id', '=', session('instanceId'))->first();
+        return $userInstance->pivot->roles_id;
     }
 
     /*
@@ -316,7 +327,7 @@ class User extends Authenticatable //implements UserInterface, RemindableInterfa
                 return 'user';
                 break;
         }
-        return $role;
+        return null;
     }
 
     /*
@@ -435,7 +446,7 @@ class User extends Authenticatable //implements UserInterface, RemindableInterfa
     public function news()
     {
         return $this->morphMany('App\News', 'author')
-        ->where('instances_id', '=', session('instanceId'));
+        ->where('news.instances_id', '=', session('instanceId'));
     }
 
     /**
@@ -444,7 +455,7 @@ class User extends Authenticatable //implements UserInterface, RemindableInterfa
     public function events()
     {
         return $this->morphMany('App\TEvent', 'author')
-        ->where('instances_id', '=', session('instanceId'));
+        ->where('events.instances_id', '=', session('instanceId'));
     }
 
 
@@ -474,7 +485,7 @@ class User extends Authenticatable //implements UserInterface, RemindableInterfa
     public function shares()
     {
         return $this->morphMany('App\Share', 'author')
-        ->where('instances_id', '=', session('instanceId'));
+        ->where('shares.instances_id', '=', session('instanceId'));
     }
 
     /**
@@ -482,8 +493,8 @@ class User extends Authenticatable //implements UserInterface, RemindableInterfa
      */
     public function offers()
     {
-        return $this->morphMany('App\Offer', 'profile')
-            ->where('instances_id', '=', session('instanceId'));
+        return $this->morphMany('App\Offer', 'author')
+            ->where('offers.instances_id', '=', session('instanceId'));
     }
 
 
@@ -522,7 +533,7 @@ class User extends Authenticatable //implements UserInterface, RemindableInterfa
     public function comments()
     {
         return $this->morphMany('App\Comment', 'author')
-            ->where('instances_id', '=', session('instanceId'));
+            ->where('comments.instances_id', '=', session('instanceId'));
     }
 
 
@@ -838,7 +849,7 @@ class User extends Authenticatable //implements UserInterface, RemindableInterfa
     public function medias()
     {
         return $this->belongsToMany('App\Media', 'users_has_medias', 'users_id', 'medias_id')
-            ->where('instances_id', '=', session('instanceId'))
+            ->where('medias.instances_id', '=', session('instanceId'))
             ->withPivot(['profile_image'])
             ->where('under_workflow', '=', 0);
     }
@@ -1779,6 +1790,12 @@ class User extends Authenticatable //implements UserInterface, RemindableInterfa
     public function workflows()
     {
         return $this->hasMany('App\Workflow', 'users_id', 'id')
+            ->where('instances_id', '=', session('instanceId'));
+    }
+
+    public function stats()
+    {
+        return $this->morphMany('App\Stat', 'entity')
             ->where('instances_id', '=', session('instanceId'));
     }
 }

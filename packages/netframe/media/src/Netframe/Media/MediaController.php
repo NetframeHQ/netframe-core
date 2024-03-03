@@ -140,6 +140,11 @@ class MediaController extends BaseController
                 MediasArchive::insert($originalMedia);
 
                 $media = Media::find(request()->get('mediaId'));
+
+                if (in_array($media->type, [Media::TYPE_AUDIO, Media::TYPE_VIDEO])) {
+                    $media->encoded = 0;
+                }
+
                 $viewType = View::TYPE_REPLACE;
             } else {
                 $media = new Media();

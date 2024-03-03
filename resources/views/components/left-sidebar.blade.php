@@ -1,5 +1,5 @@
 <nav id="sidebar-wrapper" class="sidebar-wrapper">
-    <a href="{{ url()->route('user.timeline') }}" title="{{ trans('netframe.leftMenu.home') }}" class="navigation-logo">
+    <a href="{{ url()->route('netframe.workspace.home') }}" title="{{ trans('netframe.leftMenu.home') }}" class="navigation-logo">
         @if(isset($menuLogo))
             <div style="background-image: url('{{ $menuLogo }}')" class="logo-img nf-logosquare nf-logorect menu-logo-light {{ (isset($disableCssMode)) ? $disableCssMode : '' }}" alt="Logo"></div>
         @else
@@ -101,7 +101,6 @@
         <div class="sidebar-title" title="{{ trans('netframe.leftMenu.'.$keyProfile) }}">
             <h3>{{ trans('netframe.leftMenu.'.$keyProfile) }}</h3>
             @if(!auth()->user()->visitor && session('profileAuth.userCanCreate.'.$keyProfile))
-
                 <a class="nf-btn btn-ico btn-nobg" href="{{ url()->route($keyProfile.'.edit') }}" alt="{{ trans('netframe.createYour'.ucfirst($keyProfile)) }}" title="{{ trans('netframe.createYour'.ucfirst($keyProfile)) }}">
                     <span class="btn-img svgicon">
                         @include('macros.svg-icons.plus')
@@ -139,15 +138,17 @@
                         </a>
                     </li>
                 @endforeach
-                <li>
-                    <a href="{{ url()->route($keyProfile.'.edit') }}" title="{{ trans('netframe.createYour'.ucfirst($keyProfile)) }}">
-                        <span class="svgicon icon-talkentity">
-                            @include('macros.svg-icons.add')
-                        </span>
-                        <span class="txt">{{ trans('netframe.createYour'.ucfirst($keyProfile)) }}</span>
+                @if(!auth()->user()->visitor && session('profileAuth.userCanCreate.'.$keyProfile))
+                    <li>
+                        <a href="{{ url()->route($keyProfile.'.edit') }}" title="{{ trans('netframe.createYour'.ucfirst($keyProfile)) }}">
+                            <span class="svgicon icon-talkentity">
+                                @include('macros.svg-icons.add')
+                            </span>
+                            <span class="txt">{{ trans('netframe.createYour'.ucfirst($keyProfile)) }}</span>
 
-                    </a>
-                </li>
+                        </a>
+                    </li>
+                @endif
                 @if($userProfiles[$keyProfile]->count() > 3
                     && (session()->has('profileDisplay') && session('profileDisplay') != $keyProfile || !session()->has('profileDisplay'))
                     )

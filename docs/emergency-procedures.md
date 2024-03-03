@@ -71,3 +71,16 @@ We have no fix information to give, contact CTO.
 2. Check if Elastic Search indexes are readonly. To do this, run `curl -X GET http://localhost:9200/_all/_settings` and see if a `"read_only_allow_delete":"true"` option appears.
 3. If the option appears, unlock indexes. To do this, run `curl -X PUT -H 'Content-Type: application/json' -d '{"index.blocks.read_only_allow_delete":null}' http://localhost:9200/_all/_settings`.
 
+
+## History
+
+### 2020-12-23 ??:?? (morning)
+
+Problem: Elastic Search was [readonly](#elastic-search-is-readonly).
+
+Performed actions:
+
+* [purge logs](#fix-too-much-logs)
+* [unlock Elastic Search indexes](#fix-indexes-lock)
+* create an issue to document these actions
+* initiate this document

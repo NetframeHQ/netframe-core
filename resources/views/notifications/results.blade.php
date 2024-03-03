@@ -25,7 +25,7 @@
         <div class="notifications-content">
             <ul class="nf-list-settings" id="notifications-results">
                 @if(0 === count($results))
-                    <li>
+                    <li class="p-3">
                         {{ trans('notifications.no_matching_results') }}
                     </li>
                 @endif

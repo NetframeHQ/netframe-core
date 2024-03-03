@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: {{ .Chart.Name }}-broadcast
+  namespace: {{ .Release.Namespace | quote }}
+
+  labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 4 }}
+    app.kubernetes.io/component: "broadcast"
+    app.kubernetes.io/version: {{ required "Value appVersionBroadcast is required" .Values.appVersionBroadcast | quote }}
+
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name | quote }}
+      app.kubernetes.io/component: "broadcast"
+  replicas: {{ .Values.appReplicasBroadcast | default 1 }}
+  revisionHistoryLimit: 2
+
+  template:
+    metadata:
+      namespace: {{ .Chart.Name }}
+      labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 8 }}
+        app.kubernetes.io/component: "broadcast"
+        app.kubernetes.io/version: {{ required "Value appVersionBroadcast is required" .Values.appVersionBroadcast | quote }}
+
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: {{ .Chart.Name }}-broadcast
+          image: {{ required "Value imagesRegistryUrl is required" .Values.imagesRegistryUrl }}/broadcast:{{ required "Value appVersionBroadcast is required" .Values.appVersionBroadcast }}
+          ports:
+            - containerPort: 80
+          env:
+            - name: LARAVEL_ECHO_SERVER_AUTH_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Chart.Name }}-broadcast
+                  key: auth-host
+            - name: LARAVEL_ECHO_SERVER_REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-external
+                  key: cache-host
+            - name: LARAVEL_ECHO_SERVER_REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-external
+                  key: cache-port
+            - name: LARAVEL_ECHO_SERVER_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-external
+                  key: cache-password
+      imagePullSecrets:
+        - name: {{ .Chart.Name }}-registry

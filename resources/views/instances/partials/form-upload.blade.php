@@ -1,7 +1,7 @@
 <div class="display-edit">
     {{ Form::open(['route' => 'instances.upload', 'files' => true, 'class' => 'fileupload', 'id'=> $image]) }}
         <span class="fileinput-button">
-            {{ Form::file('file', array('accept' => 'image/*')) }}
+            {{ Form::file('file', array('accept' => 'image/jpeg, image/pjpeg, image/png, image/gif')) }}
         </span>
         <div class="row d-none" id="progress-files">
             <div class="col-md-12">

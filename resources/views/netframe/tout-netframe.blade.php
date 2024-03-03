@@ -21,7 +21,7 @@
 
         <section class="feed" id="newsFeed">
             @foreach($newsfeed as $post)
-                @include('page.post-content')
+                @include('page.post-content-loader')
             @endforeach
         </section>
 
@@ -40,6 +40,9 @@
 @parent
 <script>
 (function($){
+    // load posts
+    loadTimelinePosts();
+
     //include function for infinitescroll
 	var scrolling = 0;
 
@@ -51,6 +54,7 @@
                 .success(function (data) {
                     $("#newsFeed").append(data.view);
                     scrolling = 0;
+                    loadTimelinePosts();
 
                     new PlayMediaModal({
                         $modal: $modal,

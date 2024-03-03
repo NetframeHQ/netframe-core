@@ -442,6 +442,11 @@ Route::group(['prefix' => '/', 'middleware' => 'checkAuth'], function () {
         'uses' => 'NetframeController@workspaceHome'
     ]);
 
+    Route::get('portal', [
+        'as' => 'portal',
+        'uses' => 'NetframeController@portal'
+    ]);
+
     Route::get('/', function () {
         return redirect()->route('netframe.workspace.home');
     });
@@ -988,6 +993,14 @@ Route::group(['prefix' => '/', 'middleware' => 'checkAuth'], function () {
         ])->where('profileId', '\d+')
         ->where('profileType', 'community|house|project')
         ->where('active', '0|1');
+
+        // stats for groups
+        Route::get('/stats/{profileType}/{profileId}/{period?}', [
+            'as' => 'profile.stats',
+            'uses' => 'PageController@stats'
+        ])->where('profileId', '\d+')
+        ->where('profileType', 'community|house|project')
+        ->where('period', '\d+');
     });
 
 
@@ -1432,11 +1445,9 @@ Route::group(['prefix' => '/', 'middleware' => 'checkAuth'], function () {
     });
 
     # Route to onlyofficeds
-    /*
     Route::get('/onlyofficeds', [
         'as' => 'onlyofficeds'
     ]);
-    */
 
 
     #--------------------- ANNUAIRE -------------------#

@@ -1,0 +1,120 @@
+- name: APP_ENV
+  valueFrom:
+    configMapKeyRef:
+      name: {{ .Chart.Name }}-netframe
+      key: env
+- name: APP_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Chart.Name }}-netframe
+      key: app-key
+- name: APP_URL
+  valueFrom:
+    configMapKeyRef:
+      name: {{ .Chart.Name }}-netframe
+      key: url
+- name: APP_BASE_DOMAIN
+  valueFrom:
+    configMapKeyRef:
+      name: {{ .Chart.Name }}-netframe
+      key: base-domain
+- name: APP_BASE_PROTOCOL
+  valueFrom:
+    configMapKeyRef:
+      name: {{ .Chart.Name }}-netframe
+      key: base-protocol
+- name: SESSION_DOMAIN
+  valueFrom:
+    configMapKeyRef:
+      name: {{ .Chart.Name }}-netframe
+      key: session-domain
+- name: SESSION_DRIVER
+  valueFrom:
+    configMapKeyRef:
+      name: {{ .Chart.Name }}-netframe
+      key: session-driver
+- name: DB_HOST
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Chart.Name }}-external
+      key: database-host
+- name: DB_DATABASE
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Chart.Name }}-external
+      key: database-database
+- name: DB_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Chart.Name }}-external
+      key: database-user
+- name: DB_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Chart.Name }}-external
+      key: database-password
+- name: REDIS_HOST
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Chart.Name }}-external
+      key: cache-host
+- name: REDIS_PORT
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Chart.Name }}-external
+      key: cache-port
+- name: REDIS_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Chart.Name }}-external
+      key: cache-password
+- name: SEARCH_HOSTS
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Chart.Name }}-external
+      key: search-uri
+- name: SEARCH_INDEX_PREFIX
+  valueFrom:
+    configMapKeyRef:
+      name: {{ .Chart.Name }}-netframe
+      key: search-prefix
+- name: MAIL_DRIVER
+  valueFrom:
+    configMapKeyRef:
+      name: {{ .Chart.Name }}-netframe
+      key: mail-driver
+- name: MAIL_HOST
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Chart.Name }}-external
+      key: mail-host
+- name: MAIL_PORT
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Chart.Name }}-external
+      key: mail-port
+- name: MAIL_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Chart.Name }}-external
+      key: mail-username
+- name: MAIL_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Chart.Name }}-external
+      key: mail-password
+- name: MAIL_FROM_ADDRESS
+  valueFrom:
+    configMapKeyRef:
+      name: {{ .Chart.Name }}-netframe
+      key: mail-sender-address
+- name: MAIL_FROM_NAME
+  valueFrom:
+    configMapKeyRef:
+      name: {{ .Chart.Name }}-netframe
+      key: mail-sender-name
+- name: PROXY_FILE_SENDING_HEADER
+  valueFrom:
+    configMapKeyRef:
+      name: {{ .Chart.Name }}-netframe
+      key: proxy-file-header

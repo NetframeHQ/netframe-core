@@ -801,7 +801,17 @@ export default {
     //this.socket = io(window.location.hostname+':3000', {query: 'docId='+this.$route.params.id+'&userId='+this.sessionId})
     // K8S PATH : /collab/broadcast/socket.io
     
-    this.socket = io(window.location.origin + document.head.querySelector("[name~=collab-ws-port][content]").content, {
+    if (document.head.querySelector("[name~=collab-ws-url][content]").content != '') {
+        var collabUrl = document.head.querySelector("[name~=collab-ws-url][content]").content;
+    } else {
+        var collabUrl = window.location.origin;
+    }
+    
+    if (document.head.querySelector("[name~=collab-ws-port][content]").content != '') {
+        collabUrl += ':' + document.head.querySelector("[name~=collab-ws-port][content]").content;
+    }
+    
+    this.socket = io(collabUrl, {
       path: document.head.querySelector("[name~=collab-ws-path][content]").content,
       query: {
         docId: this.$route.params.id,

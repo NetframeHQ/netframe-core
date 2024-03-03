@@ -1,6 +1,6 @@
 <h2>CONDITIONS GENERALES D'UTILISATION</h2>
 <p>
-Netframe est une plateforme web et mobile, accessible à l'adresse suivante : www.netframe.co et l'ensemble des pages attachées (la « Plateforme ») exploitée par illisite, SARL au capital de 27 754  euros, dont le siège social est situé 43 boulevard Vauban, 78280 Guyancourt , immatriculée au registre du commerce et des sociétés de Versailles sous le numéro d'identification 433 508 439 000 42 et dont le numéro de TVA intracommunautaire est 604 335 084 39<br>
+Netframe est une plateforme web et mobile, accessible à l'adresse suivante : www.netframe.co et l'ensemble des pages attachées (la « Plateforme ») exploitée par netframe, SAS au capital de 100 100  euros, dont le siège social est situé 81 rue REAUMUR, 75002 PARIS , immatriculée au registre du commerce et des sociétés de Paris sous le numéro d'identification 840 294 300 00016 et dont le numéro de TVA intracommunautaire est FR61840294300<br>
 Ladite plateforme permet d'accéder à différents services de communication centralisés et gérés au sein d'une interface unique.
 </p>
 <p>
@@ -93,7 +93,7 @@ Les données à caractère personnel sont stockées par illisite sur les serveur
 L'Utilisateur reste toujours propriétaire des informations le concernant qu'il transmet à illisite. Il dispose, conformément à la loi n° 78-17 du 6 janvier 1978 modifiée par la loi n° 2004-801 du 6 août 2004, d'un droit d'accès, de rectification et de suppression des données à caractère personnel le concernant, ainsi que du droit de s'opposer à la communication de ces données à des tiers pour de justes motifs.
 </p>
 <p>
-L'Utilisateur pourra exercer ses droits en le demandant à l'adresse <a href="https://www.netframe.fr/contactez-nous/" target="_blank">https://www.netframe.fr/contactez-nous/</a> ou à l'adresse postale suivante : 43 boulevard Vauban, 78280 Guyancourt
+L'Utilisateur pourra exercer ses droits en le demandant à l'adresse <a href="https://www.netframe.fr/contactez-nous/" target="_blank">https://www.netframe.fr/contactez-nous/</a> ou à l'adresse postale suivante : 81 rue REAUMUR, 75002 PARIS
 </p>
 <p>
 Une réponse à la requête de l'Utilisateur lui sera adressée dans un délai de 30 jours.

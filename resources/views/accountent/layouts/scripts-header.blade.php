@@ -1,5 +1,3 @@
-{{-- HTML::favicon() --}}
-
 {{ HTML::script('assets/js/modernizr.custom-2.8.3.js') }}
 
 {{ HTML::style('assets/css/bootstrap.css') }}

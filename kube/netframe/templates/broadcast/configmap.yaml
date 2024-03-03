@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: {{ .Chart.Name }}-broadcast
+  namespace: {{ .Release.Namespace | quote }}
+
+  labels: {{ include (print .Template.BasePath "/_labels-default.yaml") . | nindent 4 }}
+    app.kubernetes.io/component: "broadcast"
+    app.kubernetes.io/version: {{ required "Value appVersionBroadcast is required" .Values.appVersionBroadcast | quote }}
+
+data:
+  auth-host: {{ required "Value appProtocol is required" .Values.appProtocol }}://broadcast.{{ required "Value appHost is required" .Values.appHost }}

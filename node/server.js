@@ -21,7 +21,8 @@ if (prodMod == 'BM') {
 const app = require('express')();
 const httpServer = (prodMod == 'BM') ? require('https').Server(credentials, app) : require('http').Server(app);
 const io = require('socket.io').listen(httpServer);
-const port = 3000;
+const listenHost = process.env.COLLAB_LISTEN_HOST;
+const port = process.env.COLLAB_PORT_BACK;
 
 //bd
 function getMysqlConnectionOptions() {
@@ -202,6 +203,7 @@ io.sockets.on('connection', async (socket) => {
   })
 })
 
-httpServer.listen(port, () => {
-  console.log("Listening on port "+port)
+httpServer.listen(port, listenHost, () => {
+  console.log("Listening on host "+listenHost);
+  console.log("Listening on port "+port);
 })

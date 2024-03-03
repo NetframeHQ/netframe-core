@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Support\Database\CacheQueryBuilder;
 use Carbon\Carbon;
 use App\Helpers\ColorsHelper;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Lang;
 
 class Instance extends Model
 {
@@ -258,6 +260,15 @@ class Instance extends Model
     {
         $instanceSlug = str_slug($instanceName);
 
+        // test if instance subdomain is not reserved
+        $reservedSubDomains = config('instances.reservedSubDomains');
+        if (!empty(env('DEFAULT_SUBDOMAIN'))) {
+            $reservedSubDomains[] = env('DEFAULT_SUBDOMAIN');
+        }
+        if (in_array($instanceSlug, $reservedSubDomains)) {
+            $instanceSlug .= '1';
+        }
+
         //check slug unicity
         $slugCount = count(Instance::whereRaw("slug REGEXP '^{$instanceSlug}([0-9]*)?$'")->get());
         $instanceSlug = ($slugCount > 0) ? $instanceSlug.$slugCount : $instanceSlug;
@@ -267,6 +278,7 @@ class Instance extends Model
         $this->begin_date = Carbon::now()->addDays(90)->format('Y-m-d H:i:s');
         $this->save();
 
+        $this->makeDefaultTaskTemplate();
         $this->makeInstanceParameters();
         $this->makeAppPortal();
 
@@ -372,6 +384,47 @@ class Instance extends Model
         foreach ($apps as $application) {
             $this->apps()->attach($application->id);
         }
+    }
+
+    /*
+     * create default task template for this instance
+     */
+    private function makeDefaultTaskTemplate()
+    {
+        $defaultTemplateName = trans('task.sample.title');
+
+        $fields = [
+            Str::slug(trans('task.sample.colTxt'), "-") => [
+                'name' => trans('task.sample.colTxt'),
+                'type' => 'text',
+                'required' => true,
+            ],
+            Str::slug(trans('task.sample.colEmail'), "-") => [
+                'name' => trans('task.sample.colEmail'),
+                'type' => 'email',
+                'required' => true,
+            ],
+            Str::slug(trans('task.sample.colDate'), "-") => [
+                'name' => trans('task.sample.colDate'),
+                'type' => 'date',
+                'required' => true,
+            ],
+            Str::slug(trans('task.sample.colFile'), "-") => [
+                'name' => trans('task.sample.colFile'),
+                'type' => 'file',
+                'required' => false,
+            ],
+        ];
+
+        $user = auth()->guard('web')->user();
+        $template = new Template();
+        $template->linked = true;
+        $template->name = $defaultTemplateName;
+        $template->instances_id = $this->id;
+        $template->cols = json_encode($fields);
+        $template->language = Lang::locale();
+        $template->has_medias = 1;
+        $template->save();
     }
 
     public function newUser()
@@ -511,6 +564,16 @@ class Instance extends Model
         return $this->hasMany('App\Template', 'instances_id', 'id');
     }
 
+    public function allStats()
+    {
+        return $this->hasMany('App\Stat', 'instances_id', 'id');
+    }
+
+    public function stats()
+    {
+        return $this->morphMany('App\Stat', 'entity');
+    }
+
     public function listRoles($roleKey = null)
     {
         if ($roleKey == null) {
@@ -572,6 +635,8 @@ class Instance extends Model
                                     --nf-bgColor: ' . $paramCss[$theme]['light']['bgColor'] . ' !important;
                                     --nf-accentColor: ' . $paramCss[$theme]['light']['accentColor'] . ' !important;
                                     --nf-baseColor: ' . $paramCss[$theme]['light']['baseColor'] . ' !important;
+                                    --nf-baseColor-dark: ' . $paramCss[$theme]['dark']['baseColor'] . ' !important;
+                                    --nf-baseColor-light: ' . $paramCss[$theme]['light']['baseColor'] . ' !important;
                                 }
                             }';
                     }
@@ -583,6 +648,8 @@ class Instance extends Model
                                     --nf-bgColor: ' . $paramCss[$theme]['dark']['bgColor'] . ' !important;
                                     --nf-accentColor: ' . $paramCss[$theme]['dark']['accentColor'] . ' !important;
                                     --nf-baseColor: ' . $paramCss[$theme]['dark']['baseColor'] . ' !important;
+                                    --nf-baseColor-dark: ' . $paramCss[$theme]['dark']['baseColor'] . ' !important;
+                                    --nf-baseColor-light: ' . $paramCss[$theme]['light']['baseColor'] . ' !important;
                                 }
                             }
                         ';

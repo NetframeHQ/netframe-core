@@ -57,7 +57,7 @@
             <div class="form-element panel-event-allday-ctn">
                 <label for="panel-event-allday">
                     <div class="nf-checkbox">
-                        {{ Form::checkbox('all_day', 1, ($post->all_day == 1), ['id' => 'panel-event-allday', 'class' => '']) }}
+                        {{ Form::checkbox('all_day', 1, ($post->all_day == 1 || $post->id == null), ['id' => 'panel-event-allday', 'class' => '']) }}
                     </div>
                     <span class="text">{{ trans('event.event_all_day') }}</span>
                 </label>

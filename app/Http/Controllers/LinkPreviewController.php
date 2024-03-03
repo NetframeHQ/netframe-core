@@ -104,7 +104,11 @@ class LinkPreviewController extends BaseController
                                 $mainImage = $url . '/' . $mainImage;
                             }
                             if (isset($mainImage)) {
-                                $filename = storage_path().'/uploads/screenshots/'.rand().'.jpg';
+                                $pathToDir = storage_path().'/uploads/screenshots/';
+                                if (!file_exists($pathToDir)) {
+                                    $result = \File::makeDirectory($pathToDir, 0775, true);
+                                }
+                                $filename = $pathToDir . rand() . '.jpg';
                                 $contents = file_get_contents($mainImage);
                                 file_put_contents($filename, $contents);
                             }

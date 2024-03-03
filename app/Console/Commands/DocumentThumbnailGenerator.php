@@ -42,13 +42,12 @@ class DocumentThumbnailGenerator extends Command
     public function handle(OfficeConverterGenerator $thumbnailGenerator)
     {
         $command = $this;
-        $medias = Media::where('encoded', 0)
+        $medias = Media::where('encoded', '=', 0)
             ->where('type', Media::TYPE_DOCUMENT)
             // exclu les fichiers excel ou les feuilles de calcul
             ->where('mime_type', 'not like', '%excel%')
             ->where('mime_type', 'not like', '%sheet%')
             ->get();
-
         // vérouille les médias pour ne pas lancer deux fois la génération d'une miniature dessus
         $medias->each(function ($media) {
             $media->encoded = 2;
@@ -56,7 +55,6 @@ class DocumentThumbnailGenerator extends Command
         });
 
         $medias->each(function ($media) use ($thumbnailGenerator, $command) {
-
             try {
                 $this->line(sprintf('Generate thumbnail for document #%s %s', $media->id, $media->file_path));
                 $thumbnailGenerator

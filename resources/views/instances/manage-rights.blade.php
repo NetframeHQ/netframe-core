@@ -104,7 +104,6 @@
             <div class="tab-pane @if(request()->get('pane') == 'channels') active @endif" id="channels">
                 <ul class="nf-list-settings">
                     @foreach($channels as $profile)
-
                         @include('join.member-card', ['member' => $profile, 'profile' => $profile->member])
                     @endforeach
                 </ul>

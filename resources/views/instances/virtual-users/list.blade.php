@@ -50,46 +50,47 @@
                                 </div>
                             </li>
                         @else
-                        <li class="nf-action">
-                            <a href="#" class="nf-btn btn-submenu btn-ico">
-                                <span class="btn-img svgicon">
-                                    @include('macros.svg-icons.menu')
-                                </span>
-                            </a>
-                            <div class="submenu-container submenu-right">
-                                <ul class="submenu">
-                                    <li>
-                                        <a class="nf-btn" href="{{url()->route('instance.virtualuser.edit', ['userId' => $user->id, 'virtualUserId' => $virtualUser->id])}}">
-                                            <span class="btn-txt">
-                                                {{ trans('instances.profiles.change.edit') }}
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        @if($virtualUser->active == 1)
-                                            <a class="nf-btn fn-active-profile" href="{{ URL::route('instance.virtualuser.disable') }}" data-toggle-state="0" data-profile-id="{{ $virtualUser->id }}">
+                            <li class="nf-action">
+                                <a href="#" class="nf-btn btn-submenu btn-ico">
+                                    <span class="btn-img svgicon">
+                                        @include('macros.svg-icons.menu')
+                                    </span>
+                                </a>
+                                <div class="submenu-container submenu-right">
+                                    <ul class="submenu">
+                                        <li>
+                                            <a class="nf-btn" href="{{url()->route('instance.virtualuser.edit', ['userId' => $user->id, 'virtualUserId' => $virtualUser->id])}}">
                                                 <span class="btn-txt">
-                                                    {{ trans('instances.profiles.disable') }}
+                                                    {{ trans('instances.profiles.change.edit') }}
                                                 </span>
                                             </a>
-                                        @else
-                                            <a class="nf-btn fn-active-profile" href="{{ URL::route('instance.virtualuser.disable') }}" data-toggle-state="1" data-profile-id="{{ $virtualUser->id }}">
+                                        </li>
+                                        <li>
+                                            @if($virtualUser->active == 1)
+                                                <a class="nf-btn fn-active-profile" href="{{ URL::route('instance.virtualuser.disable') }}" data-toggle-state="0" data-profile-id="{{ $virtualUser->id }}">
+                                                    <span class="btn-txt">
+                                                        {{ trans('instances.profiles.disable') }}
+                                                    </span>
+                                                </a>
+                                            @else
+                                                <a class="nf-btn fn-active-profile" href="{{ URL::route('instance.virtualuser.disable') }}" data-toggle-state="1" data-profile-id="{{ $virtualUser->id }}">
+                                                    <span class="btn-txt">
+                                                        {{ trans('instances.profiles.enable') }}
+                                                    </span>
+                                                </a>
+                                            @endif
+                                        </li>
+                                        <li>
+                                            <a class="nf-btn fn-confirm-delete" href="{{ URL::route('instance.virtualuser.delete', ['virtualUserId' => $virtualUser->id]) }}" data-txtconfirm="{{ trans('instances.virtualUsers.deleteConfirm') }}">
                                                 <span class="btn-txt">
-                                                    {{ trans('instances.profiles.enable') }}
+                                                    {{ trans('instances.profiles.delete') }}
                                                 </span>
                                             </a>
-                                        @endif
-                                    </li>
-                                    <li>
-                                        <a class="nf-btn fn-confirm-delete" href="{{ URL::route('instance.virtualuser.delete', ['virtualUserId' => $virtualUser->id]) }}" data-txtconfirm="{{ trans('instances.virtualUsers.deleteConfirm') }}">
-                                            <span class="btn-txt">
-                                                {{ trans('instances.profiles.delete') }}
-                                            </span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        @endif
                     </ul>
                 </li>
             @endforeach

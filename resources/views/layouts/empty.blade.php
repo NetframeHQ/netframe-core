@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ \Lang::getLocale() }}">
+<html lang="{{ \Lang::getLocale() }}" class="auto-scroll">
 <head>
     <meta charset="UTF-8" />
     <meta name="_token" content="{{ csrf_token() }}" />
@@ -15,8 +15,42 @@
     @include('layouts.partials.scripts-header')
 </head>
 <body class="auto-scroll">
-
-    @yield('content')
+    <div class="col-12 col-lg-8 offset-lg-2 pb-4 pt-4">
+        <div class="panel default-panel mb-5">
+            <div class="panel-heading d-flex flex-column">
+                <div class="d-flex justify-content-end w-100">
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <a href="https://www.netframe.co">
+                                netfame.co
+                            </a>
+                        </li>
+                        <li class="list-inline-item"> - </li>
+                        <li class="list-inline-item">
+                            <a href="https://work.netframe.co/boarding">
+                                {{ trans('links.boarding') }}
+                            </a>
+                        </li>
+                        <li class="list-inline-item"> - </li>
+                        <li class="list-inline-item">
+                            <a href="https://work.netframe.co/login">
+                                {{ trans('links.login') }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mb-5 mt-4">
+                    <img src="{{ asset('assets/img/widget-logo.png') }}" class="img-fluid center-block menu-logo-light {{ (isset($disableCssMode)) ? $disableCssMode : '' }}">
+                    <img src="{{ asset('assets/img/widget-logo-dark.png') }}" class="img-fluid center-block menu-logo-dark {{ (isset($disableCssMode)) ? $disableCssMode : '' }}">
+                </div>
+                <h1 class="widget-title">@yield('title')</h1>
+            </div>
+            <div class="panel-body p-4">
+                @yield('content')
+            </div>
+        </div>
+    </div>
+    @include('static.links')
 
     @include('layouts.partials.scripts-footer')
 

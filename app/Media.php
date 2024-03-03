@@ -307,14 +307,25 @@ class Media extends TlMedia
 
     public function toReducedArray()
     {
-
+        $content = '';
         try {
             if ($this->type == TlMedia::TYPE_DOCUMENT &&
                 file_exists($this->file_path) &&
                 is_readable($this->file_path)
             ) {
-                $indexClient = \Vaites\ApacheTika\Client::make(base_path('_bin/tika-app-2.6.0.jar'));
-                $content = $indexClient->getText($this->file_path);
+                if (app()->runningInConsole()) {
+                    $indexClient = \Vaites\ApacheTika\Client::make(
+                        base_path('_bin/tika-app-2.6.0.jar'),
+                        '/usr/bin/java'
+                    );
+                } else {
+                    $indexClient = \Vaites\ApacheTika\Client::make(base_path('_bin/tika-app-2.6.0.jar'));
+                }
+
+                try {
+                    $content = $indexClient->getText($this->file_path);
+                } catch (\Exception $e) {
+                }
             } else {
                 $content = '';
             }

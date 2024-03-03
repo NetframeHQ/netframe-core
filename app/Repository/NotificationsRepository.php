@@ -983,6 +983,7 @@ class NotificationsRepository
                     } else {
                         //delete on task doesn't exist anymore
                         $wait->delete();
+                        $wait = null;
                     }
 
                     break;
@@ -1011,7 +1012,7 @@ class NotificationsRepository
                     break;
             }
 
-            if ($wait->read == 0 && $markRead && $wait->type != 'askFriend') {
+            if ($wait != null && $wait->read == 0 && $markRead && $wait->type != 'askFriend') {
                 $wait->read = 1;
                 $wait->save();
             }

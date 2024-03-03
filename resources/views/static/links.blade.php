@@ -1,4 +1,4 @@
-<ul class="list-inline d-md-flex justify-content-center login-links align-items-end">
+<ul class="list-inline d-lg-flex justify-content-center login-links align-items-start">
     <li class="list-inline-item">
         <a href="{{ url()->route('static_cgv') }}">{{ trans('links.cgv') }}</a>
     </li>

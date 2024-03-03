@@ -1,6 +1,6 @@
 <h2>CONDITIONS GENERALES DE VENTE</h2>
 <p>
-Netframe est une plateforme de travail en équipe développée et exploitée par illisite, SARL au capital de 27 754  euros, dont le siège social est situé 43 boulevard Vauban, 78280 Guyancourt , immatriculée au registre du commerce et des sociétés de Versailles sous le numéro d'identification 433 508 439 000 42 et dont le numéro de TVA intracommunautaire est 604 335 084 39 (Ci-après nommé le « Prestataire »).
+Netframe est une plateforme web et mobile, accessible à l'adresse suivante : www.netframe.co et l'ensemble des pages attachées (la « Plateforme ») exploitée par netframe, SAS au capital de 100 100  euros, dont le siège social est situé 81 rue REAUMUR, 75002 PARIS , immatriculée au registre du commerce et des sociétés de Paris sous le numéro d'identification 840 294 300 00016 et dont le numéro de TVA intracommunautaire est FR61840294300 (Ci-après nommé le « Prestataire »).<br>
 </p>
 <h3>Partie 1 Définitions et Objet</h3>
 <p>
@@ -38,7 +38,7 @@ L'Organisation utilisant la plateforme reconnait avoir la capacité requise pour
 L'Utilisateur est généralement en relation contractuelle directe ou indirecte avec l'Organisation contractante, qui peut lui attribuer un statut d'utilisateur membre ou invité déterminant ses droits d'accès à la Plateforme, ou faire évoluer librement ses conditions d'accès à tout ou partie des services de la Plateforme. Le choix de statut déterminé librement par l'Organisation n'emporte aucune différence de statut pour la Plateforme, pour laquelle tout utilisateur est couvert par les Conditions Générales d'Utilisation.
 </p>
 <p>
-<strong>Prestataire :</strong> Illisite développe et commercialise la plateforme Netframe à la signature du présent contrat. Le Prestataire pourra être une société Netframe et le contrat transféré dans cette entité sans remise en cause des présents engagements.
+<strong>Prestataire :</strong> Netframe développe et commercialise la plateforme Netframe à la signature du présent contrat. Le Prestataire pourra être une société Netframe et le contrat transféré dans cette entité sans remise en cause des présents engagements.
 </p>
 <p>
 Le Prestataire et l'Organisation sont ci-après dénommés les « Parties ».

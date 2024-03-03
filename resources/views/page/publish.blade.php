@@ -55,7 +55,7 @@
                         @if($post->post_type == 'App\\NetframeAction' && $post->post->type_action == 'new_profile' && auth()->user()->visitor)
                             @continue
                         @endif
-                        @include('page.post-content')
+                        @include('page.post-content-loader')
                     @endif
                 @endforeach
             @else
@@ -87,6 +87,9 @@ current_profile_type = '{{ $profile->getType() }}';
 current_profile_id = {{ $profile->id }};
 
 (function($){
+    // load posts
+    loadTimelinePosts();
+
     //include function for infinitescroll
     var profileIdFeed = {{ $profile->id }};
     var profileTypeFeed = '{{ $profile->getType() }}';
@@ -101,7 +104,8 @@ current_profile_id = {{ $profile->id }};
                     .success(function (data) {
                         $("#newsFeed").append(data.view);
                         scrolling = 0;
-                        
+                        loadTimelinePosts();
+
                         new PlayMediaModal({
                             $modal: $modal,
                             $modalTitle: $modal.find('.modal-title'),
@@ -142,10 +146,6 @@ current_profile_id = {{ $profile->id }};
          });
     });
     */
-
-    // load events maps
-    loadMapEvents("#newsFeed");
-
 })(jQuery);
 </script>
 @stop

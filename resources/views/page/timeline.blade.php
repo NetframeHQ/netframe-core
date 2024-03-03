@@ -21,13 +21,12 @@
                 </div>
             @endif
 
-
             @if($canPostOnTimeline)
                 @include('posting.init')
             @endif
             @foreach($newsfeed as $post)
                 @if($post->post != null)
-                    @include('page.post-content')
+                    @include('page.post-content-loader')
                 @endif
             @endforeach
         </section>
@@ -51,6 +50,9 @@
 @parent
 <script>
 (function($){
+    // load posts
+    loadTimelinePosts();
+
     //include function for infinitescroll
     var profileIdFeed = '{{ $dataUser->id }}';
     var profileTypeFeed = 'user';
@@ -64,6 +66,7 @@
                 .success(function (data) {
                     $("#newsFeed").append(data.view);
                     scrolling = 0;
+                    loadTimelinePosts();
 
                     new PlayMediaModal({
                         $modal: $modal,
@@ -78,8 +81,6 @@
                         $(this).attr('id', newVideoId);
                         videojs(newVideoId);
                     });
-
-                    loadMapEvents("#newsFeed");
                 });
         }
     });
@@ -94,9 +95,6 @@
         $media: $('.viewMedia'),
         baseUrl: baseUrl
     });
-
-    // load events maps
-    loadMapEvents("#newsFeed");
 })(jQuery);
 </script>
 @stop

@@ -691,7 +691,7 @@ class JoinController extends BaseController
                 'profile' => $instance,
                 'member' => $user
             ])->render();
-        } else {
+        } elseif ($typeLink != 'instance') {
             // check current user rights on profile
             if (!is_null($profileId) &&
                 (
@@ -744,8 +744,6 @@ class JoinController extends BaseController
 
         // event to reload user rights
         event(new AddProfile($userId));
-
-
 
         return response()->json([
             'view' => $view,

@@ -52,6 +52,11 @@ class CheckAuth
 
                 if (auth()->guard('web')->viaRemember()
                     && !session()->exists("allProfiles")) { // && !session("allProfiles")){
+                    if (!auth()->guard('web')->user()->active) {
+                        auth()->guard('web')->logout();
+                        return redirect()->route('login');
+                    }
+
                     //if sessions not exists, create them
                     $authAuto = app('App\Http\Controllers\AuthController')->autoLogin();
                     if (class_basename($authAuto) == 'RedirectResponse') {
@@ -127,7 +132,7 @@ class CheckAuth
                     session()->forget('ghostId');
                 }
 
-                if (auth()->guard('web')->user()->check_rights == 1) {
+                if (auth()->guard('web')->user()->check_rights == 1 || !session()->has('acl')) {
                     // regenerate instance session var
                     $instance = auth()
                         ->guard('web')
@@ -140,6 +145,7 @@ class CheckAuth
                         "acl" =>  Netframe::getAcl(auth()->guard('web')->user()->id),
                         "allProfiles" => Netframe::getProfiles(auth()->guard('web')->user()->id),
                         "instance" => $instance,
+                        "instanceRoleId" => auth()->guard('web')->user()->getInstanceRoleId(),
                         'instanceRole' => auth()->guard('web')->user()->getInstanceRole(),
                         "allFeeds" => auth()
                             ->guard('web')
@@ -149,7 +155,6 @@ class CheckAuth
                             ->orderBy('name')
                             ->pluck('name', 'id'),
                     ]);
-
                     // get and store profiles creation authorizations
                     $profileAuth = auth()->guard('web')->user()->storeInstanceProfile($instance);
                     session(['profileAuth' => $profileAuth]);
@@ -178,6 +183,12 @@ class CheckAuth
                 view()->share([
                     'NetframeProfiles' => [],
                 ]);
+            }
+
+            // if user is disabled during navigation
+            if (!auth()->guard('web')->user()->active) {
+                auth()->guard('web')->logout();
+                return redirect()->route('login');
             }
 
             //Check l'url si l'utilisateur existe à partir du segment user et slug

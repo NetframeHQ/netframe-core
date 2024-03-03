@@ -41,8 +41,8 @@ class OfficeController extends BaseController
     public function create($documentType, $profileType, $profileId, $mediasFolder = null)
     {
         $instance = Instance::find(session('instanceId'));
-        $profileType = Profile::gather($profileType);
-        $profile = $profileType::find($profileId);
+        $profileModel = Profile::gather($profileType);
+        $profile = $profileModel::find($profileId);
         $mediasFolder = $mediasFolder ? MediasFolder::find($mediasFolder) : null;
 
         // check user rights on profile
@@ -63,6 +63,12 @@ class OfficeController extends BaseController
             $filename = request()->get('name');
             $filename = preg_replace("/[^A-Za-z0-9 ]/", '', $filename);
             $file_name = sha1($filename . microtime());
+
+            $storage_dir = $storage_dir = env('NETFRAME_DATA_PATH', base_path())
+                . '/storage/uploads/documents/';
+            if (!file_exists($storage_dir)) {
+                $result = \File::makeDirectory($storage_dir, 0775, true);
+            }
 
             switch ($documentType) {
                 case 'spreadsheet':

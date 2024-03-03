@@ -109,6 +109,10 @@ enter\:node: # Enter in a NodeJS container for debug purpose
 	$(info Entering NodeJS container)
 	@docker-compose run --rm --no-deps --entrypoint /usr/bin/env collab bash
 
+enter\:echo: # Enter in a NodeJS container for debug purpose
+	$(info Entering NodeJS Laravel-echo container)
+	@docker-compose run --rm --no-deps --entrypoint /usr/bin/env broadcast bash
+
 enter\:mysql: # Enter in a MariaDB container for debug purpose
 	$(info Entering MariaDB container)
 	@docker-compose run --rm --no-deps --entrypoint /usr/bin/env database bash
